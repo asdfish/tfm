@@ -13,16 +13,17 @@ int main(void) {
 
   struct Menu menu = {
     .x = 0, .y = 0, .width = 10, .height = 10,
-    .cursor = 0, .cursor_background = TB_WHITE, .normal_background = TB_BLACK,
+    .cursor = 0, .background_reversed = TB_WHITE, .background = TB_BLACK,
   };
 
   menu_init(&menu);
-  menu_set_items(&menu, menu_items, ARRAY_LENGTH(menu_items));
+  if(menu_set_items(&menu, menu_items, ARRAY_LENGTH(menu_items)) != 0)
+    goto exit;
 
   tb_init();
 
   while(true) {
-    /*menu_draw(&menu);*/
+    menu_draw(&menu);
     tb_present();
 
     struct tb_event event;
@@ -30,7 +31,7 @@ int main(void) {
 
     switch(event.ch) {
       case 'q':
-        goto exit;
+        goto tb_shutdown;
       case 'k':
         menu_move_cursor(&menu, -1);
         break;
@@ -44,8 +45,8 @@ int main(void) {
 
   menu_uninit(&menu);
 
-exit:
+tb_shutdown:
   tb_shutdown();
-
+exit:
   return 0;
 }

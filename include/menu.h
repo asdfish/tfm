@@ -17,8 +17,8 @@ struct Menu {
   unsigned int camera;                // do not change
 
   unsigned int cursor;                // must be set
-  uintattr_t cursor_background;       // must be set
-  uintattr_t normal_background;       // must be set
+  uintattr_t background;              // must be set
+  uintattr_t background_reversed;     // must be set
 
   bool select;                        // do not change
   unsigned int selection;             // do not change
