@@ -76,6 +76,11 @@ void menu_draw(struct Menu* menu) {
   }
 }
 
+void menu_free(struct Menu* menu) {
+  menu_free_items(menu);
+  menu_free_filtered_items(menu);
+}
+
 void menu_free_filtered_items(struct Menu* menu) {
   if(menu->filtered_items != NULL) {
     free(menu->filtered_items);
@@ -166,9 +171,4 @@ void menu_move_cursor(struct Menu* menu, int step) {
 void menu_toggle_select(struct Menu* menu) {
   menu->select = !menu->select;
   menu->selection = menu->cursor;
-}
-
-void menu_uninit(struct Menu* menu) {
-  menu_free_items(menu);
-  menu_free_filtered_items(menu);
 }

@@ -47,7 +47,7 @@ int main(void) {
     }
   }
 
-  menu_uninit(&menu);
+  menu_free(&menu);
 
 tb_shutdown:
   tb_shutdown();
