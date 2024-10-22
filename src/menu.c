@@ -53,8 +53,8 @@ void menu_draw(struct Menu* menu) {
     const char* item_name = item->contents;
     unsigned int item_name_length = strlen(item_name);
  
-    uintattr_t foreground = 0;
-    uintattr_t background = 0; 
+    uintattr_t foreground;
+    uintattr_t background; 
 
     if(
       (menu->select && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) ||
