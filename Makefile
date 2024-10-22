@@ -8,7 +8,7 @@ LD_FLAGS := -Ldeps/orchestra -lorchestra
 DIRECTORIES := build deps
 DEPENDENCIES := deps/orchestra deps/termbox2
 
-OBJECT_FILES := build/main.o $\
+OBJECT_FILES := build/main.o build/menu.o $\
 								build/termbox2.o
 
 all: ${DIRECTORIES} ${DEPENDENCIES} tfm
