@@ -2,7 +2,7 @@ CC ?= cc
 C_FLAGS := -std=gnu11 $\
 					 -O2 -march=native -pipe $\
 					 -Wall -Wextra -Wpedantic $\
-					 -Iinclude -Ideps/orchestra -Ideps/termbox2
+					 -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
 
 DIRECTORIES := build deps

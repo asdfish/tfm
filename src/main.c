@@ -17,7 +17,7 @@ int main(void) {
   };
 
   menu_init(&menu);
-  if(menu_set_items(&menu, menu_items, ARRAY_LENGTH(menu_items)) != 0)
+  if(menu_change_items(&menu, menu_items, ARRAY_LENGTH(menu_items)) != 0)
     goto exit;
 
   tb_init();

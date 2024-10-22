@@ -6,6 +6,20 @@
 #define MIN(x, y) (x < y ? x : y)
 #define MAX(x, y) (x > y ? x : y)
 
+int menu_change_filtered_items(struct Menu* menu, const char* filter) {
+  menu_free_filtered_items(menu);
+
+  if(filter == NULL || strlen(filter) == 0)
+    return 0;
+
+  return menu_set_filtered_items(menu, filter);
+}
+
+int menu_change_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length) {
+  menu_free_items(menu);
+  return menu_set_items(menu, items, items_length);
+}
+
 void menu_draw(struct Menu* menu) {
   if(menu->camera > menu->cursor)
     menu->camera = menu->cursor;
@@ -15,15 +29,7 @@ void menu_draw(struct Menu* menu) {
   struct MenuItem** menu_items = NULL;
   unsigned int menu_items_length = 0;
 
-  if(menu->filter != NULL) {
-    menu_items = menu->filtered_items;
-    menu_items_length = menu->filtered_items_length;
-  } else {
-    menu_items = menu->items;
-    menu_items_length = menu->items_length;
-  }
-
-  if(menu->filter != NULL) {
+  if(menu->filtered_items != NULL) {
     menu_items = menu->filtered_items;
     menu_items_length = menu->filtered_items_length;
   } else {
@@ -50,8 +56,8 @@ void menu_draw(struct Menu* menu) {
     uintattr_t background = 0; 
 
     if(
-      (menu->select && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) || // selected
-      item_y == menu->cursor // cursor
+      (menu->select && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) ||
+      item_y == menu->cursor
     ) {
       foreground = item->foreground_reversed;
       background = menu->background_reversed;
@@ -70,11 +76,25 @@ void menu_draw(struct Menu* menu) {
   }
 }
 
+void menu_free_filtered_items(struct Menu* menu) {
+  if(menu->filtered_items != NULL) {
+    free(menu->filtered_items);
+    menu->filtered_items = NULL;
+  }
+}
+
+void menu_free_items(struct Menu* menu) {
+  if(menu->items != NULL) {
+    free(menu->items);
+    menu->items = NULL;
+  }
+}
+
 int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
   if(!menu->select)
     return 0;
 
-  struct MenuItem** items = menu->filter != NULL ? menu->filtered_items : menu->items;
+  struct MenuItem** items = menu->filtered_items != NULL ? menu->filtered_items : menu->items;
 
   unsigned int min = MIN(menu->cursor, menu->selection);
   unsigned int max = MAX(menu->cursor, menu->selection);
@@ -97,9 +117,29 @@ void menu_init(struct Menu* menu) {
   menu->select = false;
   menu->selection = 0;
 
-  menu->filter = NULL;
   menu->filtered_items = NULL;
   menu->filtered_items_length = 0;
+}
+
+int menu_set_filtered_items(struct Menu* menu, const char* filter) {
+  unsigned int filtered_items_length = 0;
+  for(unsigned int i = 0; i < menu->items_length; i++)
+    if(strstr(menu->items[i]->contents, filter) != NULL)
+      filtered_items_length ++;
+
+  struct MenuItem** filtered_items = (struct MenuItem**) malloc(filtered_items_length * sizeof(struct Menu*));
+  if(filtered_items == NULL)
+    return -1;
+
+  for(unsigned int i = 0, j = 0; i < menu->items_length; i ++)
+    if(strstr(menu->items[i]->contents, filter) != NULL) {
+      filtered_items[j] = menu->items[i];
+      j ++;
+    }
+      
+  menu->filtered_items = filtered_items;
+  menu->filtered_items_length = filtered_items_length;
+  return 0;
 }
 
 int menu_set_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length) {
@@ -125,13 +165,10 @@ void menu_move_cursor(struct Menu* menu, int step) {
 
 void menu_toggle_select(struct Menu* menu) {
   menu->select = !menu->select;
-  if(menu->select)
-    menu->selection = menu->cursor;
+  menu->selection = menu->cursor;
 }
 
 void menu_uninit(struct Menu* menu) {
-  if(menu->items != NULL) {
-    free(menu->items);
-    menu->items = NULL;
-  }
+  menu_free_items(menu);
+  menu_free_filtered_items(menu);
 }
