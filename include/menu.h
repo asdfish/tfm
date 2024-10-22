@@ -33,10 +33,10 @@ struct Menu {
 
 extern void menu_draw(struct Menu* menu);
 extern void menu_init(struct Menu* menu);
-extern int menu_get_selected(struct Menu* menu, struct MenuItem** output);                       // 0 success | -1 malloc
+extern int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length); // 0 success | -1 malloc
 extern void menu_move_cursor(struct Menu* menu, int step);
-extern int menu_set_filter(struct Menu* menu, const char* filter);                               // 0 success | -1 malloc
-extern int menu_set_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length); // 0 success | -1 malloc
+extern int menu_set_filter(struct Menu* menu, const char* filter);                                      // 0 success | -1 malloc
+extern int menu_set_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length);        // 0 success | -1 malloc
 extern void menu_toggle_select(struct Menu* menu);
 extern void menu_uninit(struct Menu* menu);
 

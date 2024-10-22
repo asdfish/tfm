@@ -22,6 +22,9 @@ int main(void) {
 
   tb_init();
 
+  struct MenuItem** selected = NULL;
+  unsigned int selected_length = 0;
+
   while(true) {
     menu_draw(&menu);
     tb_present();
@@ -40,6 +43,7 @@ int main(void) {
         break;
       case ' ':
         menu_toggle_select(&menu);
+        break;
     }
   }
 
@@ -47,6 +51,12 @@ int main(void) {
 
 tb_shutdown:
   tb_shutdown();
+  if(selected != NULL) {
+    for(unsigned int i = 0; i < selected_length; i ++)
+      printf("%s\n", (*(selected + i))->contents);
+    printf("%u", selected_length);
+    free(selected);
+  }
 exit:
   return 0;
 }

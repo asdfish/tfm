@@ -70,6 +70,27 @@ void menu_draw(struct Menu* menu) {
   }
 }
 
+int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
+  if(!menu->select)
+    return 0;
+
+  struct MenuItem** items = menu->filter != NULL ? menu->filtered_items : menu->items;
+
+  unsigned int min = MIN(menu->cursor, menu->selection);
+  unsigned int max = MAX(menu->cursor, menu->selection);
+
+  unsigned int selection_length = (max - min) + 1;
+
+  *output = (struct MenuItem**) malloc(selection_length * sizeof(struct MenuItem*));
+  if(output == NULL)
+    return -1;
+
+  for(unsigned int i = 0; i < selection_length; i ++)
+    (*output)[i] = items[min + i];
+  *output_length = selection_length;
+  return 0;
+}
+
 void menu_init(struct Menu* menu) {
   menu->camera = 0;
 
