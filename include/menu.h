@@ -37,6 +37,8 @@ extern void menu_free(struct Menu* menu);
 extern void menu_free_filtered_items(struct Menu* menu);
 extern void menu_free_items(struct Menu* menu);
 extern void menu_init(struct Menu* menu);
+extern struct MenuItem** menu_get_current_items(struct Menu* menu);
+extern unsigned int menu_get_current_items_length(struct Menu* menu);
 extern int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length);
 extern void menu_move_cursor(struct Menu* menu, int step);
 extern int menu_set_filtered_items(struct Menu* menu, const char* filter);

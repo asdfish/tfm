@@ -12,7 +12,16 @@ int menu_change_filtered_items(struct Menu* menu, const char* filter) {
   if(filter == NULL || strlen(filter) == 0)
     return 0;
 
-  return menu_set_filtered_items(menu, filter);
+  int result = menu_set_filtered_items(menu, filter);
+  if(result != 0)
+    return result;
+
+  if(menu->cursor > menu->filtered_items_length)
+    menu->cursor = menu->filtered_items_length;
+  if(menu->selection > menu->filtered_items_length)
+    menu->selection = menu->filtered_items_length;
+
+  return 0;
 }
 
 int menu_change_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length) {
@@ -26,16 +35,8 @@ void menu_draw(struct Menu* menu) {
   else if(menu->camera + menu->height - 1 < menu->cursor)
     menu->camera = menu->cursor - menu->height + 1;
 
-  struct MenuItem** menu_items = NULL;
-  unsigned int menu_items_length = 0;
-
-  if(menu->filtered_items != NULL) {
-    menu_items = menu->filtered_items;
-    menu_items_length = menu->filtered_items_length;
-  } else {
-    menu_items = menu->items;
-    menu_items_length = menu->items_length;
-  }
+  struct MenuItem** menu_items = menu_get_current_items(menu);
+  unsigned int menu_items_length = menu_get_current_items_length(menu);
 
   for(unsigned int i = 0; i < menu->height; i ++) {
     unsigned int item_y = i + menu->y;
@@ -77,29 +78,39 @@ void menu_draw(struct Menu* menu) {
 }
 
 void menu_free(struct Menu* menu) {
-  menu_free_items(menu);
   menu_free_filtered_items(menu);
+  menu_free_items(menu);
 }
 
 void menu_free_filtered_items(struct Menu* menu) {
-  if(menu->filtered_items != NULL) {
-    free(menu->filtered_items);
-    menu->filtered_items = NULL;
-  }
+  if(menu->filtered_items == NULL)
+    return;
+
+  free(menu->filtered_items);
+  menu->filtered_items = NULL;
 }
 
 void menu_free_items(struct Menu* menu) {
-  if(menu->items != NULL) {
-    free(menu->items);
-    menu->items = NULL;
-  }
+  if(menu->items == NULL)
+    return;
+
+  free(menu->items);
+  menu->items = NULL;
+}
+
+struct MenuItem** menu_get_current_items(struct Menu* menu) {
+  return menu->filtered_items != NULL ? menu->filtered_items : menu->items;
+}
+
+unsigned int menu_get_current_items_length(struct Menu* menu) {
+  return menu->filtered_items != NULL ? menu->filtered_items_length : menu->items_length;
 }
 
 int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
   if(!menu->select)
     return 0;
 
-  struct MenuItem** items = menu->filtered_items != NULL ? menu->filtered_items : menu->items;
+  struct MenuItem** items = menu_get_current_items(menu);
 
   unsigned int min = MIN(menu->cursor, menu->selection);
   unsigned int max = MAX(menu->cursor, menu->selection);
@@ -164,8 +175,10 @@ void menu_move_cursor(struct Menu* menu, int step) {
   else
     menu->cursor = 0;
 
-  if(menu->cursor > menu->items_length - 1)
-    menu->cursor = menu->items_length - 1;
+  unsigned int items_length = menu_get_current_items_length(menu);
+
+  if(menu->cursor > items_length - 1)
+    menu->cursor = items_length - 1;
 }
 
 void menu_toggle_select(struct Menu* menu) {

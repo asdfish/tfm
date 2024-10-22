@@ -5,10 +5,9 @@
 
 int main(void) {
   struct MenuItem menu_items[] = {
-    { TB_WHITE, TB_BLACK, "asdf" },
-    { TB_WHITE, TB_BLACK, "asdf" },
-    { TB_WHITE, TB_BLACK, "asdf" },
-    { TB_WHITE, TB_BLACK, "asdf" },
+    { TB_WHITE, TB_BLACK, "lorem ipsum" },
+    { TB_WHITE, TB_BLACK, "the quick brown fox jumps over the lazy dog" },
+    { TB_WHITE, TB_BLACK, "asdakfsadfkjslsakdhjjflakshgjkahwejghawejkghalwh" },
   };
 
   struct Menu menu = {
@@ -20,10 +19,10 @@ int main(void) {
   if(menu_change_items(&menu, menu_items, ARRAY_LENGTH(menu_items)) != 0)
     goto exit;
 
-  tb_init();
+  menu_change_filtered_items(&menu, "um");
+  menu_change_filtered_items(&menu, "");
 
-  struct MenuItem** selected = NULL;
-  unsigned int selected_length = 0;
+  tb_init();
 
   while(true) {
     menu_draw(&menu);
@@ -47,16 +46,9 @@ int main(void) {
     }
   }
 
-  menu_free(&menu);
-
 tb_shutdown:
+  menu_free(&menu);
   tb_shutdown();
-  if(selected != NULL) {
-    for(unsigned int i = 0; i < selected_length; i ++)
-      printf("%s\n", (*(selected + i))->contents);
-    printf("%u", selected_length);
-    free(selected);
-  }
 exit:
   return 0;
 }
