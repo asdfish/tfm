@@ -1,6 +1,6 @@
 CC ?= cc
 C_FLAGS := -std=gnu11 $\
-					 -O2 -march=native -pipe $\
+					 -Og -g -march=native -pipe $\
 					 -Wall -Wextra -Wpedantic $\
 					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
@@ -8,7 +8,7 @@ LD_FLAGS := -Ldeps/orchestra -lorchestra
 DIRECTORIES := build deps
 DEPENDENCIES := deps/orchestra deps/termbox2
 
-OBJECT_FILES := build/main.o build/menu.o build/utils.o $\
+OBJECT_FILES := build/actions.o build/main.o build/menu.o build/utils.o $\
 								build/termbox2.o
 
 all: ${DIRECTORIES} ${DEPENDENCIES} tfm
@@ -25,8 +25,9 @@ deps/termbox2:
 
 clean:
 	-rm -rf ${DIRECTORIES}
+	-rm tfm
 
-${OBJECT_FILES}: build/%.o: src/%.c $(if $(wildcard include/%.h),include/%.h)
+${OBJECT_FILES}: build/%.o: src/%.c $(wildcard include/%.h)
 	${CC} -c $< ${C_FLAGS} -o $@
 
 tfm: ${OBJECT_FILES}
