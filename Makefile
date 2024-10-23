@@ -1,8 +1,8 @@
 CC ?= cc
 C_FLAGS := -std=gnu11 $\
-					 -Og -g -march=native -pipe $\
+					 -O2 -march=native -pipe $\
 					 -Wall -Wextra -Wpedantic $\
-					 -Iinclude -Ideps/orchestra/include -Ideps/termbox2
+					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
 
 DIRECTORIES := build deps
@@ -18,7 +18,7 @@ ${DIRECTORIES}:
 
 deps/orchestra:
 	git -C deps clone https://github.com/asdfish/orchestra --depth=1
-	make -C deps/orchestra
+	$(MAKE) -C deps/orchestra
 
 deps/termbox2:
 	git -C deps clone https://github.com/termbox/termbox2 --depth=1
@@ -31,6 +31,5 @@ ${OBJECT_FILES}: build/%.o: src/%.c $(if $(wildcard include/%.h),include/%.h)
 
 tfm: ${OBJECT_FILES}
 	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
-	# strip tfm
 
 .PHONY: all clean

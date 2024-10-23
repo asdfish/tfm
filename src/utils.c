@@ -1,8 +1,23 @@
+#include <config.h>
 #include <utils.h>
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+int create_menu_items(struct dirent** dirents, unsigned int dirents_length, struct MenuItem** output) {
+  *output = (struct MenuItem*) malloc(dirents_length * sizeof(struct MenuItem));
+  if(*output == NULL)
+    return -1;
+
+  for(unsigned int i = 0; i < dirents_length; i ++) {
+    (*output)[i].contents = dirents[i]->d_name;
+    (*output)[i].foreground = foregrounds[dirents[i]->d_type];
+    (*output)[i].foreground_reversed = foregrounds_reversed[dirents[i]->d_type];
+  }
+
+  return 0;
+}
 
 int directory_dirents(const char* path, struct dirent*** output, unsigned int* output_length) {
   DIR* directory_pointer = NULL;
