@@ -63,13 +63,15 @@ int main(void) {
 
   if(directory_dirents(".", &dirents, &length) != 0)
     printf("a error occured\n");
-  /*if(dirents)*/
-  for(unsigned int i = 0; i < length; i ++) {
-    printf("%s\n", dirents[i]->d_name);
-    free(dirents[i]);
-    dirents[i] = NULL;
+
+  if(dirents) {
+    for(unsigned int i = 0; i < length; i ++) {
+      printf("%s\n", dirents[i]->d_name);
+      free(dirents[i]);
+      dirents[i] = NULL;
+    }
+    free(dirents);
+    dirents = NULL;
   }
-  free(dirents);
-  dirents = NULL;
   return 0;
 }

@@ -1,6 +1,6 @@
 CC ?= cc
 C_FLAGS := -std=gnu11 $\
-					 -O2 -march=native -pipe $\
+					 -Og -g -march=native -pipe $\
 					 -Wall -Wextra -Wpedantic $\
 					 -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
@@ -31,6 +31,6 @@ ${OBJECT_FILES}: build/%.o: src/%.c $(if $(wildcard include/%.h),include/%.h)
 
 tfm: ${OBJECT_FILES}
 	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
-	strip tfm
+	# strip tfm
 
 .PHONY: all clean

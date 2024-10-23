@@ -31,7 +31,7 @@ int directory_dirents(const char* path, struct dirent*** output, unsigned int* o
     (*output)[i] = (struct dirent*) malloc(sizeof(struct dirent));
     if((*output)[i] == NULL)
       goto free_output_contents;
-    memcpy((*output)[i], dirent_pointer, sizeof(struct dirent));
+    memmove((*output)[i], dirent_pointer, sizeof(struct dirent));
     i ++;
   }
 
@@ -42,7 +42,7 @@ int directory_dirents(const char* path, struct dirent*** output, unsigned int* o
   return 0;
 
 free_output_contents:
-  for(unsigned int j = 0; j < i; j ++) {
+  for(unsigned int j = 0; j <= i; j ++) {
     free((*output)[j]);
     (*output)[j] = NULL;
   }
