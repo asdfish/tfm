@@ -88,7 +88,7 @@ enum PathType path_type(const char* path) {
 
 int path_separate(const char* path, const char*** directories, unsigned int* directories_length, const char** file) {
   if(strstr(path, "/") == NULL) {
-    if((*file = strdup(path)) == NULL)
+    if((*file = strdup(path)) == NULL) // consistency
       return -1;
     else
       return 0;
