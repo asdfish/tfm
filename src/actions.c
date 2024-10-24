@@ -1,6 +1,7 @@
 #include <actions.h>
 #include <utils.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -32,7 +33,7 @@ exit_failure:
 }
 
 void actions_free(void) {
-  if(actions == NULL)
+  if(actions == NULL || actions_length == 0)
     return;
   
   for(unsigned int i = 0; i < actions_length; i ++)
@@ -102,7 +103,7 @@ int actions_create_path(const char* path) {
       goto single_file_free_file;
 
     arguments[0] = file;
-    if(actions_add(CREATE_FILE, arguments, 1, true) != 1) {
+    if(actions_add(CREATE_FILE, arguments, 1, true) != 0) {
       actions_length --;
       actions_free_at(actions_length);
       goto single_file_exit_failure;
@@ -116,5 +117,34 @@ single_file_exit_failure:
     return -1;
   }
 
+  unsigned int path_max_length = 0;
+  for(unsigned int i = 0; i < directories_length; i ++)
+    path_max_length += strlen(directories[i]) + 1;
+
+  char* directory = (char*) malloc(path_max_length * sizeof(char));
+  if(directory == NULL)
+    goto free_directories;
+
+  unsigned int old_length = actions_length;
+
+  for(unsigned int i = 0; i < directories_length; i ++) {
+    const char** arguments = (const char**) malloc(sizeof(const char*));
+    arguments[0] = strdup(directory);
+    actions_add(CREATE_DIRECTORY, arguments, 1, true);
+
+    strcat(directory, directories[i]);
+    strcat(directory, "/");
+  }
+
+  free(directory);
   return 0;
+
+free_directories:
+  for(unsigned int i = 0; i < directories_length; i ++) {
+    free((char*) directories[i]);
+    directories[i] = NULL;
+  }
+  free(directories);
+  directories = NULL;
+  return -1;
 }

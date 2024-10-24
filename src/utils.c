@@ -97,8 +97,8 @@ int path_separate(const char* path, const char*** directories, unsigned int* dir
   enum PathType type = path_type(path);
 
   unsigned int directories_count = string_count(path, "/");
-  if(type == PATH_DIRECTORY)
-    directories_count --;
+  /*if(type == PATH_DIRECTORY)*/
+  /*  directories_count --;*/
 
   *directories = (const char**) malloc(directories_count * sizeof(const char*));
   if(*directories == NULL)
