@@ -32,5 +32,6 @@ ${OBJECT_FILES}: build/%.o: src/%.c $(wildcard include/%.h)
 
 tfm: ${OBJECT_FILES}
 	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
+	# strip tfm
 
 .PHONY: all clean
