@@ -6,7 +6,14 @@ struct Action* actions = NULL;
 unsigned int actions_length = 0;
 
 int actions_add(enum ActionType type, const char** arguments, unsigned int arguments_length) {
-  actions_resize(actions_length + 1);
+  unsigned int old_length = actions_length;
+  int result = actions_resize(actions_length + 1);
+  if(result != 0)
+    return result;
+
+  actions[old_length].type = type;
+  actions[old_length].arguments = arguments;
+  actions[old_length].arguments_length = arguments_length;
 
   return 0;
 }
