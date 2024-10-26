@@ -1,6 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include <orchestra.h>
 #include <termbox2.h>
 
 struct MenuItem {
@@ -11,6 +12,7 @@ struct MenuItem {
 
 struct Menu {
   char mode;                                  // must be set
+  o_string strokes;                           // do not change
  
   unsigned int x, y, width, height;           // must be set
 
@@ -32,7 +34,7 @@ extern void menu_draw(struct Menu* menu);
 extern void menu_free(struct Menu* menu);
 extern void menu_free_filtered_items(struct Menu* menu);
 extern void menu_free_items(struct Menu* menu);
-extern void menu_init(struct Menu* menu);
+extern int menu_init(struct Menu* menu);
 extern struct MenuItem** menu_get_current_items(struct Menu* menu);
 extern unsigned int menu_get_current_items_length(struct Menu* menu);
 extern int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length);

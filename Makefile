@@ -3,7 +3,7 @@ COMPILE_FLAGS :=
 CC ?= cc
 
 C_FLAGS := -std=gnu11 $\
-					 -O2 -march=native -pipe $\
+					 -Og -g -march=native -pipe $\
 					 -Wall -Wextra -Wpedantic $\
 					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
@@ -11,8 +11,8 @@ LD_FLAGS := -Ldeps/orchestra -lorchestra
 DIRECTORIES := build deps
 DEPENDENCIES := deps/orchestra deps/termbox2
 
-OBJECT_FILES := build/main.o build/menu.o build/utils.o $\
-									build/termbox2.o
+OBJECT_FILES := build/bind_functions.o build/main.o build/menu.o build/utils.o $\
+								build/termbox2.o
 
 all: ${DIRECTORIES} ${DEPENDENCIES} tfm
 
@@ -35,6 +35,6 @@ ${OBJECT_FILES}: build/%.o: src/%.c
 
 tfm: ${OBJECT_FILES}
 	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
-	strip tfm
+	# strip tfm
 
 .PHONY: all clean

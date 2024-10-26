@@ -1,9 +1,13 @@
+#define INCLUDE_CONFIG_BINDINGS
+#include <config.h>
+#include <macros.h>
 #include <menu.h>
 #include <utils.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
 
 int change_directory(struct Menu* menu, const char* path);
-void handle_resize(struct Menu* menu);
 
 struct dirent** dirents = NULL;
 unsigned int dirents_length = 0;
@@ -18,13 +22,28 @@ int main(void) {
   menu.y = 0;
   menu.background = TB_BLACK;
   menu.background_reversed = TB_WHITE;
-
   handle_resize(&menu);
-  menu_init(&menu);
 
-  change_directory(&menu, ".");
+  if(menu_init(&menu) != 0) {
+    tb_shutdown();
+    perror("menu_init");
+    return -1;
+  }
 
-  char mode = 'n';
+  if(change_directory(&menu, ".") != 0) {
+    tb_shutdown();
+    perror("change_directory");
+    return -1;
+  }
+
+  {
+    unsigned int largest_stroke = 0;
+    for(unsigned int i = 0; i < ARRAY_LENGTH(bindings); i ++)
+      unsigned int stroke_length = MAX(largest_stroke, strlen(bindings[i].strokes));
+
+    o_string_reserve(&menu.strokes, largest_stroke);
+  }
+
 
   while(true) {
     menu_draw(&menu);
@@ -35,9 +54,13 @@ int main(void) {
 
     if(event.ch == 'q')
       break;
+
+    if(handle_events(&menu, &event) != 0)
+      break;
   }
 
   tb_shutdown();
+  menu_free(&menu);
 
   return 0;
 }
@@ -80,12 +103,4 @@ free_dirents:
   dirents = NULL;
 exit_failure:
   return -1;
-}
-
-void handle_resize(struct Menu* menu) {
-  int terminal_width = tb_width();
-  int terminal_height = tb_height();
-
-  menu->width = terminal_width > 0 ? terminal_width : 0;
-  menu->height = terminal_height > 0 ? terminal_height : 0;
 }

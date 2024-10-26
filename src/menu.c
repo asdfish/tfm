@@ -1,10 +1,8 @@
+#include <macros.h>
 #include <menu.h>
 
 #include <stdlib.h>
 #include <string.h>
-
-#define MIN(x, y) (x < y ? x : y)
-#define MAX(x, y) (x > y ? x : y)
 
 int menu_change_filtered_items(struct Menu* menu, const char* filter) {
   menu_free_filtered_items(menu);
@@ -78,6 +76,8 @@ void menu_draw(struct Menu* menu) {
 }
 
 void menu_free(struct Menu* menu) {
+  o_string_uninit(&menu->strokes);
+
   menu_free_filtered_items(menu);
   menu_free_items(menu);
 }
@@ -127,15 +127,23 @@ int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int
   return 0;
 }
 
-void menu_init(struct Menu* menu) {
+int menu_init(struct Menu* menu) {
+  if(o_string_init(&menu->strokes) != O_SUCCESS)
+    return -1;
+
   menu->camera = 0;
   menu->cursor = 0;
 
   menu->mode = 'n';
   menu->selection = 0;
 
+  menu->items = NULL;
+  menu->items_length = 0;
+
   menu->filtered_items = NULL;
   menu->filtered_items_length = 0;
+
+  return 0;
 }
 
 int menu_set_filtered_items(struct Menu* menu, const char* filter) {

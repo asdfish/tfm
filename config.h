@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#ifdef INCLUDE_FOREGROUNDS
+#ifdef INCLUDE_CONFIG_FOREGROUNDS
 #include <menu.h>
 #include <termbox2.h>
 #include <dirent.h>
@@ -26,5 +26,23 @@ static const uintattr_t foregrounds_reversed[] = {
   [DT_LNK] = TB_BLUE,
 };
 #endif // INCLUDE_FOREGROUNDS
+
+#ifdef INCLUDE_CONFIG_BINDINGS
+#include <bind_functions.h>
+
+struct Binding {
+  char mode; // set to ' ' for all
+  const char* strokes;
+
+  void (*function) (struct Menu* menu, const struct Argument* argument);
+  const struct Argument argument;
+};
+
+static const struct Binding bindings[] = {
+  { ' ', "k", move, { .i = -1 } },
+  { ' ', "j", move, { .i = 1 } },
+};
+
+#endif
 
 #endif
