@@ -26,10 +26,10 @@ int tfm_change_directory(struct Menu* menu, const char* path) {
     tfm_menu_items = NULL;
   }
 
-  if(directory_dirents(path, &tfm_dirents, &tfm_dirents_length) != 0)
+  if(get_dirents(path, &tfm_dirents, &tfm_dirents_length) != 0)
     goto exit_failure;
 
-  if(create_menu_items(tfm_dirents, tfm_dirents_length, &tfm_menu_items) != 0)
+  if(dirents_to_menu_items(tfm_dirents, tfm_dirents_length, &tfm_menu_items) != 0)
     goto free_tfm_dirents;
 
   menu_free_items(menu);

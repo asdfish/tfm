@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int create_menu_items(struct dirent** dirents, unsigned int dirents_length, struct MenuItem** output) {
+int dirents_to_menu_items(struct dirent** dirents, unsigned int dirents_length, struct MenuItem** output) {
   *output = (struct MenuItem*) malloc(dirents_length * sizeof(struct MenuItem));
   if(*output == NULL)
     return -1;
@@ -21,7 +21,7 @@ int create_menu_items(struct dirent** dirents, unsigned int dirents_length, stru
   return 0;
 }
 
-int directory_dirents(const char* path, struct dirent*** output, unsigned int* output_length) {
+int get_dirents(const char* path, struct dirent*** output, unsigned int* output_length) {
   DIR* directory_pointer = NULL;
   if((directory_pointer = opendir(path)) == NULL)
     goto failure_exit;
