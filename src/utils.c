@@ -1,4 +1,5 @@
-#include <config.h>
+#define INCLUDE_FOREGROUNDS
+#include <config.hpp>
 #include <utils.h>
 
 #include <stdlib.h>

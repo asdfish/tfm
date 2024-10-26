@@ -1,7 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#ifdef INCLUDE_FOREGROUNDS
+#include <menu.h>
+
 #include <termbox2.h>
+
 #include <dirent.h>
 
 static const uintattr_t foregrounds[] = {
@@ -23,5 +27,6 @@ static const uintattr_t foregrounds_reversed[] = {
   [DT_REG] = TB_BLACK,
   [DT_LNK] = TB_BLUE,
 };
+#endif
 
 #endif

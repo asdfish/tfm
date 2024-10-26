@@ -12,22 +12,19 @@ struct MenuItem {
 };
 
 struct Menu {
-  unsigned int x, y, width, height;   // must be set
+  unsigned int x, y, width, height;           // must be set
 
-  unsigned int camera;                // do not change
+  unsigned int camera, cursor;                // do not change
+  uintattr_t background, background_reversed; // must be set
 
-  unsigned int cursor;                // must be set
-  uintattr_t background;              // must be set
-  uintattr_t background_reversed;     // must be set
+  bool select;                                // do not change
+  unsigned int selection;                     // do not change
 
-  bool select;                        // do not change
-  unsigned int selection;             // do not change
+  struct MenuItem** items;                    // do not change
+  unsigned int items_length;                  // do not change
 
-  struct MenuItem** items;            // do not change
-  unsigned int items_length;          // do not change
-
-  struct MenuItem** filtered_items;   // do not change
-  unsigned int filtered_items_length; // do not change
+  struct MenuItem** filtered_items;           // do not change
+  unsigned int filtered_items_length;         // do not change
 };
 
 extern int menu_change_filtered_items(struct Menu* menu, const char* filter);

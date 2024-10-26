@@ -129,6 +129,7 @@ int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int
 
 void menu_init(struct Menu* menu) {
   menu->camera = 0;
+  menu->cursor = 0;
 
   menu->select = false;
   menu->selection = 0;
