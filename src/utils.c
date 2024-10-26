@@ -70,35 +70,6 @@ failure_exit:
   return -1;
 }
 
-int handle_events(struct Menu* menu, struct tb_event* event) {
-  if(event->type == TB_EVENT_RESIZE)
-    handle_resize(menu);
-
-  if(event->ch < UCHAR_MAX) {
-    char cat[2];
-    cat[0] = event->ch;
-    cat[1] = '\0';
-    if(o_string_cat(&menu->strokes, cat) != O_SUCCESS)
-      return -1;
-  }
-
-  for(unsigned int i = 0; i < ARRAY_LENGTH(bindings); i ++)
-    if((bindings[i].mode == ' ' || menu->mode == bindings[i].mode) && strcmp(menu->strokes.contents, bindings[i].strokes) == 0) {
-      bindings[i].function(menu, &bindings[i].argument);
-      o_string_clear(&menu->strokes);
-    }
-
-  return 0;
-}
-
-void handle_resize(struct Menu* menu) {
-  int terminal_width = tb_width();
-  int terminal_height = tb_height();
-
-  menu->width = terminal_width > 0 ? terminal_width : 0;
-  menu->height = terminal_height > 0 ? terminal_height : 0;
-}
-
 unsigned int string_count(const char* string, const char* query) {
   unsigned int count = 0;
 
