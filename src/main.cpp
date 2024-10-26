@@ -15,10 +15,12 @@ struct MenuItem* menu_items = NULL;
 int main(void) {
   tb_init();
 
-  struct Menu menu = {
-    .x = 0, .y = 0,
-    .background = TB_BLACK, .background_reversed = TB_WHITE,
-  };
+  struct Menu menu;
+  menu.x = 0;
+  menu.y = 0;
+  menu.background = TB_BLACK;
+  menu.background_reversed = TB_WHITE;
+
   handle_resize(&menu);
   menu_init(&menu);
 

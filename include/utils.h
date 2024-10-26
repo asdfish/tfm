@@ -7,7 +7,7 @@
 
 enum PathType {
   PATH_DIRECTORY,
-  PATH_FILE,
+  PATH_FILE
 };
 
 extern int create_menu_items(struct dirent** dirents, unsigned int dirents_length, struct MenuItem** output);

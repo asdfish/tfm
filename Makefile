@@ -6,7 +6,7 @@ CC ?= cc
 CXX ?= c++
 
 C_FLAGS := -std=gnu11 ${COMPILE_FLAGS}
-CXX_FLAGS := -std=c++20 ${COMPILE_FLAGS} -Wno-missing-field-initializers
+CXX_FLAGS := -std=c++98 ${COMPILE_FLAGS}
 LD_FLAGS := -Ldeps/orchestra -lorchestra
 
 DIRECTORIES := build deps
