@@ -2,7 +2,6 @@
 #include <tfm.h>
 #include <sys/stat.h>
 
-/*extern int tfm_change_directory(struct Menu* menu, const char* path);*/
 int change_directory(struct Menu* menu, const struct Argument* unused) {
   struct MenuItem** menu_items = menu_get_current_items(menu);
   struct MenuItem* item = *(menu_items + menu->cursor);
