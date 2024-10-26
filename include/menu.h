@@ -6,7 +6,6 @@ extern "C" {
 #endif
 
 #include <termbox2.h>
-#include <stdbool.h>
 
 #ifdef __cplusplus
 }
@@ -19,12 +18,13 @@ struct MenuItem {
 };
 
 struct Menu {
+  char mode;                                  // must be set
+ 
   unsigned int x, y, width, height;           // must be set
 
   unsigned int camera, cursor;                // do not change
   uintattr_t background, background_reversed; // must be set
 
-  bool select;                                // do not change
   unsigned int selection;                     // do not change
 
   struct MenuItem** items;                    // do not change

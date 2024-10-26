@@ -4,7 +4,6 @@ extern "C" {
 }
 
 int change_directory(struct Menu* menu, const char* path);
-void handle_movement(struct Menu* menu, struct tb_event* event);
 void handle_resize(struct Menu* menu);
 
 struct dirent** dirents = NULL;

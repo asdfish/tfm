@@ -57,7 +57,7 @@ void menu_draw(struct Menu* menu) {
     uintattr_t background; 
 
     if(
-      (menu->select && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) ||
+      (menu->mode == 's' && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) ||
       item_y == menu->cursor
     ) {
       foreground = item->foreground_reversed;
@@ -107,7 +107,7 @@ unsigned int menu_get_current_items_length(struct Menu* menu) {
 }
 
 int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
-  if(!menu->select)
+  if(menu->mode != 's')
     return 0;
 
   struct MenuItem** items = menu_get_current_items(menu);
@@ -131,7 +131,7 @@ void menu_init(struct Menu* menu) {
   menu->camera = 0;
   menu->cursor = 0;
 
-  menu->select = false;
+  menu->mode = 'n';
   menu->selection = 0;
 
   menu->filtered_items = NULL;
@@ -183,6 +183,6 @@ void menu_move_cursor(struct Menu* menu, int step) {
 }
 
 void menu_toggle_select(struct Menu* menu) {
-  menu->select = !menu->select;
+  menu->mode = menu->mode == 's' ? 'n' : 's';
   menu->selection = menu->cursor;
 }
