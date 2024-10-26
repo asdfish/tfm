@@ -1,16 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <menu.h>
 #include <dirent.h>
-
-#ifdef __cplusplus
-}
-#endif
 
 enum PathType {
   PATH_DIRECTORY,

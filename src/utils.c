@@ -1,5 +1,5 @@
 #define INCLUDE_FOREGROUNDS
-#include <config.hpp>
+#include <config.h>
 #include <utils.h>
 
 #include <stdlib.h>

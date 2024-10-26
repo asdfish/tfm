@@ -1,7 +1,6 @@
-extern "C" {
-  #include <menu.h>
-  #include <utils.h>
-}
+#include <menu.h>
+#include <utils.h>
+#include <stdbool.h>
 
 int change_directory(struct Menu* menu, const char* path);
 void handle_resize(struct Menu* menu);
