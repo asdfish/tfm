@@ -1,9 +1,16 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <termbox2.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#include <termbox2.h>
 #include <stdbool.h>
+
+#ifdef __cplusplus
+}
+#endif
 
 struct MenuItem {
   uintattr_t foreground;
