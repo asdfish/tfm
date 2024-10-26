@@ -115,11 +115,24 @@ int tfm_handle_events(struct Menu* menu, struct tb_event* event) {
       return -1;
   }
 
+  bool clear_stroke = false;
+  bool matches_stroke = false;
   for(unsigned int i = 0; i < ARRAY_LENGTH(bindings); i ++)
-    if((bindings[i].mode == ' ' || menu->mode == bindings[i].mode) && strcmp(menu->strokes.contents, bindings[i].strokes) == 0) {
-      bindings[i].function(menu, &bindings[i].argument);
-      o_string_clear(&menu->strokes);
+    if(bindings[i].mode == ' ' || menu->mode == bindings[i].mode) {
+      if(strncmp(menu->strokes.contents, bindings[i].strokes, strlen(menu->strokes.contents)) == 0)
+        matches_stroke = true;
+
+      if(strcmp(menu->strokes.contents, bindings[i].strokes) == 0) {
+        bindings[i].function(menu, &bindings[i].argument);
+        clear_stroke = true;
+      }
     }
+
+  if(!matches_stroke)
+    clear_stroke = true;
+
+  if(clear_stroke)
+    o_string_clear(&menu->strokes);
 
   return 0;
 }
