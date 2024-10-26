@@ -34,13 +34,14 @@ struct Binding {
   char mode; // set to ' ' for all
   const char* strokes;
 
-  void (*function) (struct Menu* menu, const struct Argument* argument);
+  int (*function) (struct Menu* menu, const struct Argument*);
   const struct Argument argument;
 };
 
 static const struct Binding bindings[] = {
   { ' ', "k", move, { .i = -1 } },
   { ' ', "j", move, { .i = 1 } },
+  { 'n', " ", change_directory },
 };
 
 #endif

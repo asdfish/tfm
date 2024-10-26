@@ -28,6 +28,8 @@ int menu_change_items(struct Menu* menu, struct MenuItem* items, unsigned int it
 }
 
 void menu_draw(struct Menu* menu) {
+  menu_verify_cursor_position(menu);
+
   if(menu->camera > menu->cursor)
     menu->camera = menu->cursor;
   else if(menu->camera + menu->height - 1 < menu->cursor)
@@ -107,6 +109,8 @@ unsigned int menu_get_current_items_length(struct Menu* menu) {
 }
 
 int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
+  menu_verify_cursor_position(menu);
+
   if(menu->mode != 's')
     return 0;
 
@@ -164,6 +168,8 @@ int menu_set_filtered_items(struct Menu* menu, const char* filter) {
       
   menu->filtered_items = filtered_items;
   menu->filtered_items_length = filtered_items_length;
+
+  menu_verify_cursor_position(menu);
   return 0;
 }
 
@@ -175,6 +181,8 @@ int menu_set_items(struct Menu* menu, struct MenuItem* items, unsigned int items
     menu->items[i] = &items[i];
 
   menu->items_length = items_length;
+
+  menu_verify_cursor_position(menu);
   return 0;
 }
 
@@ -184,13 +192,20 @@ void menu_move_cursor(struct Menu* menu, int step) {
   else
     menu->cursor = 0;
 
+  menu_verify_cursor_position(menu);
+}
+
+void menu_toggle_select(struct Menu* menu) {
+  menu_verify_cursor_position(menu);
+
+  menu->mode = menu->mode == 's' ? 'n' : 's';
+  menu->selection = menu->cursor;
+}
+
+inline void menu_verify_cursor_position(struct Menu* menu) {
+
   unsigned int items_length = menu_get_current_items_length(menu);
 
   if(menu->cursor > items_length - 1)
     menu->cursor = items_length - 1;
-}
-
-void menu_toggle_select(struct Menu* menu) {
-  menu->mode = menu->mode == 's' ? 'n' : 's';
-  menu->selection = menu->cursor;
 }

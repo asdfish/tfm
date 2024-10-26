@@ -42,5 +42,6 @@ extern void menu_move_cursor(struct Menu* menu, int step);
 extern int menu_set_filtered_items(struct Menu* menu, const char* filter);
 extern int menu_set_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length);
 extern void menu_toggle_select(struct Menu* menu);
+extern inline void menu_verify_cursor_position(struct Menu* menu);
 
 #endif

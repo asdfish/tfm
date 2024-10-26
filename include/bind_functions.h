@@ -7,6 +7,7 @@ struct Argument {
   int i;
 };
 
-extern void move(struct Menu* menu, const struct Argument* argument);
+extern int change_directory(struct Menu* menu, const struct Argument* unused);
+extern int move(struct Menu* menu, const struct Argument* argument);
 
 #endif

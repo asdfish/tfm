@@ -123,7 +123,8 @@ int tfm_handle_events(struct Menu* menu, struct tb_event* event) {
         matches_stroke = true;
 
       if(strcmp(menu->strokes.contents, bindings[i].strokes) == 0) {
-        bindings[i].function(menu, &bindings[i].argument);
+        if(bindings[i].function(menu, &bindings[i].argument) != 0)
+          return -1;
         clear_stroke = true;
       }
     }
