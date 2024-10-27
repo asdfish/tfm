@@ -1,0 +1,24 @@
+#ifndef COMMAND_LINE_H
+#define COMMAND_LINE_H
+
+#include <orchestra.h>
+#include <termbox2.h>
+
+struct CommandLine {
+  unsigned int x, y, width;                             // must be set
+  uintattr_t foreground, foreground_reversed,
+             background, background_reversed;           // must be set
+
+  char mode;                                            // do not change
+  unsigned int cursor, camera;                          // do not change
+  o_string command;                                     // do not change
+};
+
+extern int command_line_add_char(struct CommandLine* command_line, char new_char);
+extern void command_line_draw(struct CommandLine* command_line);
+extern int command_line_init(struct CommandLine* command_line);
+extern void command_line_move_cursor(struct CommandLine* command_line, int step);
+extern void command_line_uninit(struct CommandLine* command_line);
+extern void command_line_verify_cursor_position(struct CommandLine* command_line);
+
+#endif

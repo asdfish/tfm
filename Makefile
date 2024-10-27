@@ -11,9 +11,9 @@ LD_FLAGS := -Ldeps/orchestra -lorchestra
 DIRECTORIES := build deps
 DEPENDENCIES := deps/orchestra deps/termbox2
 
-PROCESSED_HEADER_FILES := include/bind_functions.h.gch include/macros.h.gch include/menu.h.gch include/tfm.h.gch include/utils.h.gch
+PROCESSED_HEADER_FILES := include/bind_functions.h.gch include/command_line.h.gch include/macros.h.gch include/menu.h.gch include/tfm.h.gch include/utils.h.gch
 
-OBJECT_FILES := build/bind_functions.o build/main.o build/menu.o build/utils.o build/tfm.o $\
+OBJECT_FILES := build/bind_functions.o build/command_line.o build/main.o build/menu.o build/utils.o build/tfm.o $\
 								build/termbox2.o
 
 all: check_clang ${DIRECTORIES} ${DEPENDENCIES} tfm
