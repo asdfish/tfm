@@ -15,6 +15,7 @@ struct CommandLine {
 };
 
 extern int command_line_add_char(struct CommandLine* command_line, char new_char);
+extern int command_line_delete_char(struct CommandLine* command_line);
 extern void command_line_draw(struct CommandLine* command_line);
 extern int command_line_init(struct CommandLine* command_line);
 extern void command_line_move_cursor(struct CommandLine* command_line, int step);
