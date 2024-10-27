@@ -39,9 +39,11 @@ struct Binding {
 };
 
 static const struct Binding bindings[] = {
+  { 'n', " ", change_directory },
+  { ' ', "G", cursor_bottom },
+  { ' ', "gg", cursor_top },
   { ' ', "k", move, { .i = -1 } },
   { ' ', "j", move, { .i = 1 } },
-  { 'n', " ", change_directory },
 };
 
 #endif

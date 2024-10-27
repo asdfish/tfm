@@ -202,7 +202,7 @@ void menu_toggle_select(struct Menu* menu) {
   menu->selection = menu->cursor;
 }
 
-inline void menu_verify_cursor_position(struct Menu* menu) {
+void menu_verify_cursor_position(struct Menu* menu) {
 
   unsigned int items_length = menu_get_current_items_length(menu);
 
