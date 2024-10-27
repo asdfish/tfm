@@ -57,7 +57,7 @@ void menu_draw(struct Menu* menu) {
     uintattr_t background; 
 
     if(
-      (menu->mode == 's' && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) ||
+      (menu->mode == 'v' && item_y >= MIN(menu->cursor, menu->selection) && item_y <= MAX(menu->cursor, menu->selection)) ||
       item_y == menu->cursor
     ) {
       foreground = item->foreground_reversed;
@@ -111,7 +111,7 @@ unsigned int menu_get_current_items_length(struct Menu* menu) {
 int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
   menu_verify_cursor_position(menu);
 
-  if(menu->mode != 's')
+  if(menu->mode != 'v')
     return 0;
 
   struct MenuItem** items = menu_get_current_items(menu);
@@ -198,7 +198,7 @@ void menu_move_cursor(struct Menu* menu, int step) {
 void menu_toggle_select(struct Menu* menu) {
   menu_verify_cursor_position(menu);
 
-  menu->mode = menu->mode == 's' ? 'n' : 's';
+  menu->mode = menu->mode == 'v' ? 'n' : 'v';
   menu->selection = menu->cursor;
 }
 

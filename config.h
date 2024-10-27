@@ -40,6 +40,11 @@ struct Binding {
 
 static const struct Binding bindings[] = {
   { 'n', " ", change_directory },
+  { 'n', "v", toggle_visual_mode },
+
+  { 'v', "o", switch_cursor_with_selection },
+  { 'v', "i", toggle_visual_mode },
+
   { ' ', "G", cursor_bottom },
   { ' ', "gg", cursor_top },
   { ' ', "k", move, { .i = -1 } },
