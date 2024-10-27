@@ -61,12 +61,10 @@ include/%.gch: include/%
 include/%.pch: include/%.gch
 	${CC} -c $< ${C_FLAGS}
 
-${OBJECT_FILES}: build/%.o: src/%.c
+build/%.o: src/%.c
 	${CC} -c $< ${C_FLAGS} -o $@
-	strip --strip-unneeded $@
 
 tfm: ${PROCESSED_HEADER_FILES} ${OBJECT_FILES}
 	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
-	strip -s tfm
 
 .PHONY: all check_clang clean

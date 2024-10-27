@@ -47,8 +47,8 @@ static const struct Binding bindings[] = {
 
   { ' ', "G", cursor_bottom },
   { ' ', "gg", cursor_top },
-  { ' ', "k", move, { .i = -1 } },
-  { ' ', "j", move, { .i = 1 } },
+  { ' ', "k", cursor_move, { .i = -1 } },
+  { ' ', "j", cursor_move, { .i = 1 } },
 };
 
 #endif

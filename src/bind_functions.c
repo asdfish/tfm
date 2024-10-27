@@ -33,7 +33,7 @@ int cursor_bottom(struct Menu* menu, const struct Argument* unused) {
   return 0;
 }
 
-int move(struct Menu* menu, const struct Argument* argument) {
+int cursor_move(struct Menu* menu, const struct Argument* argument) {
   menu_move_cursor(menu, argument->i);
   return 0;
 }
