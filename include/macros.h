@@ -6,4 +6,6 @@
 #define MIN(x, y) (x < y ? x : y)
 #define MAX(x, y) (x > y ? x : y)
 
+#define NUMBER_STRING_LENGTH(number) ((number / 10) + 1)
+
 #endif

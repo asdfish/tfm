@@ -1,4 +1,8 @@
+#define INCLUDE_CONFIG_COMMANDS
 #include <command_line.h>
+#include <config.h>
+#include <macros.h>
+#include <utils.h>
 
 int command_line_add_char(struct CommandLine* command_line, char new_char) {
   char insert[2] = " \0";
@@ -69,6 +73,55 @@ void command_line_draw(struct CommandLine* command_line) {
   tb_set_cell(command_line->x, command_line->y, command_line->mode, command_line->foreground, command_line->background);
 }
 
+int command_line_execute(struct CommandLine* command_line, bool* refresh_menu) {
+  if(command_line->mode != ':')
+    return 0;
+
+  const char** words = NULL;
+  unsigned int words_length = 0;
+
+  if(sentence_separate(command_line->command.contents, &words, &words_length) != 0)
+    return -1;
+
+  int exit_code = 0;
+
+  unsigned int command = 0;
+  for(unsigned int i = 0; i < words_length; i ++)
+    for(unsigned int j = 0; j < ARRAY_LENGTH(commands); j ++)
+      if(strcmp(words[i], commands[j].name) == 0) {
+        command = j;
+        goto execute_command;
+      }
+
+  unsigned int message_length = strlen(MESSAGE_COMMAND_NOT_FOUND) - 2 +
+    strlen(commands[command].name);
+
+  command_line->message = (const char*) malloc((message_length + 1) * sizeof(char));
+  if(command_line->message == NULL) {
+    exit_code = -1;
+    goto exit;
+  }
+  command_line->mode = ' ';
+  sprintf((char*) command_line->message, MESSAGE_COMMAND_NOT_FOUND, commands[command].name);
+  goto exit;
+
+execute_command:
+  if(commands[command].function(words, words_length, refresh_menu, (char**) &command_line->message) != 0) {
+    exit_code = -1;
+    goto exit;
+  }
+  command_line->mode = ' ';
+
+exit:
+  for(unsigned int i = 0; i < words_length; i ++) {
+    free((char*) words[i]);
+    words[i] = NULL;
+  }
+  free(words);
+  words = NULL;
+  return exit_code;
+}
+
 int command_line_init(struct CommandLine* command_line) {
   int result = o_string_init(&command_line->command);
   if(result != O_SUCCESS)
@@ -94,6 +147,11 @@ void command_line_move_cursor(struct CommandLine* command_line, int step) {
 
 void command_line_uninit(struct CommandLine* command_line) {
   o_string_uninit(&command_line->command);
+
+  if(command_line->message != NULL) {
+    free(command_line->message);
+    command_line->message = NULL;
+  }
 }
 
 void command_line_verify_cursor_position(struct CommandLine* command_line) {

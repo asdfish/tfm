@@ -53,4 +53,24 @@ static const struct Binding bindings[] = {
 
 #endif
 
+#ifdef INCLUDE_CONFIG_COMMANDS
+
+#include <commands.h>
+#include <stdbool.h>
+
+#define MESSAGE_COMMAND_NOT_FOUND "Command %s not found."
+#define MESSAGE_CREATE_PATHS "Successfully created %u/%u paths."
+
+struct Command {
+  const char* name;
+
+  int (*function) (const char**, unsigned int, bool*, char**);
+};
+
+static const struct Command commands[] = {
+  { "create_paths", create_paths }
+};
+
+#endif
+
 #endif
