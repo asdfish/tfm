@@ -34,7 +34,7 @@ void command_line_draw(struct CommandLine* command_line) {
   else if(command_line->camera + command_line->width - 1 < command_line->cursor)
     command_line->camera = command_line->cursor - command_line->width + 1;
 
-  for(unsigned int i = 0; i < command_line->width; i ++) {
+  for(unsigned int i = 0; i < (command_line->width == 0 ? 0 : command_line->width - 1); i ++) {
     unsigned int char_x = command_line->camera + i;
 
     uintattr_t foreground = command_line->foreground;
@@ -50,8 +50,10 @@ void command_line_draw(struct CommandLine* command_line) {
     if(char_x < command_length)
       next_char = command_line->command.contents[char_x];
 
-    tb_set_cell(command_line->x + i, command_line->y, next_char, foreground, background);
+    tb_set_cell(command_line->x + i + 1, command_line->y, next_char, foreground, background);
   }
+
+  tb_set_cell(command_line->x, command_line->y, command_line->mode, command_line->foreground, command_line->background);
 }
 
 int command_line_init(struct CommandLine* command_line) {
@@ -61,6 +63,8 @@ int command_line_init(struct CommandLine* command_line) {
 
   command_line->camera = 0;
   command_line->cursor = 0;
+
+  command_line->mode = ':';
 
   return 0;
 }
