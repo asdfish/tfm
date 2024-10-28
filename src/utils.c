@@ -3,9 +3,94 @@
 #include <config.h>
 #include <macros.h>
 #include <utils.h>
+#include <orchestra.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+
+int create_file(const char* path) {
+  if(path_exists(path))
+    return -1;
+
+  FILE* file_pointer = fopen(path, "w");
+  if(file_pointer == NULL)
+    return -1;
+  fclose(file_pointer);
+
+  return 0;
+}
+
+int create_directory(const char* path) {
+  if(path_exists(path))
+    return -1;
+
+  return mkdir(path, 0700);
+}
+
+int create_path(const char* path) {
+  const char** directories = NULL;
+  unsigned int directories_length = 0;
+  const char* file = NULL;
+
+  if(path_separate(path, &directories, &directories_length, &file) != 0)
+    return -1;
+
+  int exit_code = 0;
+  
+  if(file != NULL && directories == NULL) {
+    exit_code = create_file(file);
+    goto free_paths;
+  }
+
+  o_string directory;
+  if(o_string_init(&directory) != 0) {
+    exit_code = -1;
+    goto free_paths;
+  }
+
+  for(unsigned int i = 0; i < directories_length; i ++) {
+    if(o_string_cat(&directory, directories[i]) != 0 ||
+        o_string_cat(&directory, "/") != 0) {
+      exit_code = -1;
+      goto free_directory;
+    }
+
+    if(create_directory(directory.contents) != 0) {
+      exit_code = -1;
+      goto free_directory;
+    }
+  }
+
+  if(file != NULL) {
+    if(o_string_cat(&directory, file) != O_SUCCESS) {
+      exit_code = -1;
+      goto free_directory;
+    }
+
+    if(create_file(directory.contents) != 0) {
+      exit_code = -1;
+      goto free_directory;
+    }
+  }
+
+free_directory:
+  o_string_uninit(&directory);
+free_paths:
+  if(directories != NULL) {
+    for(unsigned int i = 0; i < directories_length; i ++) {
+      free((char*) directories[i]);
+      directories[i] = NULL;
+    }
+    free(directories);
+    directories = NULL;
+  }
+  if(file != NULL) {
+    free((char*) file);
+    file = NULL;
+  }
+  return exit_code;
+}
 
 int dirents_to_menu_items(struct dirent** dirents, unsigned int dirents_length, struct MenuItem** output) {
   *output = (struct MenuItem*) malloc(dirents_length * sizeof(struct MenuItem));
@@ -142,6 +227,16 @@ unsigned int string_count(const char* string, const char* query) {
   }
 
   return count;
+}
+
+bool path_exists(const char* path) {
+  struct stat st;
+  int result = stat(path, &st);
+
+  if(result == 0)
+    return true;
+  else
+    return false;
 }
 
 enum PathType path_type(const char* path) {

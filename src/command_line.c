@@ -25,6 +25,19 @@ int command_line_delete_char(struct CommandLine* command_line) {
 }
 
 void command_line_draw(struct CommandLine* command_line) {
+  if(command_line->mode == ' ') {
+    for(unsigned int i = 0; i < command_line->width; i ++) {
+      char next_char = ' ';
+
+      if(command_line->message != NULL && i < strlen(command_line->message))
+        next_char = command_line->message[i];
+
+      tb_set_cell(command_line->x + i, command_line->y, next_char, command_line->foreground, command_line->background);
+    }
+
+    return;
+  }
+
   command_line_verify_cursor_position(command_line);
 
   unsigned int command_length = strlen(command_line->command.contents);
@@ -64,6 +77,7 @@ int command_line_init(struct CommandLine* command_line) {
   command_line->camera = 0;
   command_line->cursor = 0;
 
+  command_line->message = NULL;
   command_line->mode = ':';
 
   return 0;

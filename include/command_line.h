@@ -9,6 +9,7 @@ struct CommandLine {
   uintattr_t foreground, foreground_reversed,
              background, background_reversed;           // must be set
 
+  const char* message;                                  // do not change
   char mode;                                            // do not change
   unsigned int cursor, camera;                          // do not change
   o_string command;                                     // do not change

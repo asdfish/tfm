@@ -1,5 +1,3 @@
-COMPILE_FLAGS := 
-
 CC := gcc
 
 C_FLAGS := -std=gnu11 $\
@@ -11,16 +9,16 @@ LD_FLAGS := -Ldeps/orchestra -lorchestra
 DIRECTORIES := build deps
 DEPENDENCIES := deps/orchestra deps/termbox2
 
-PROCESSED_HEADER_FILES := include/bind_functions.h.gch include/command_line.h.gch include/macros.h.gch include/menu.h.gch include/tfm.h.gch include/utils.h.gch
+PROCESSED_HEADER_FILES := include/bind_functions.h.gch include/commands.h.gch include/command_line.h.gch include/macros.h.gch include/menu.h.gch include/tfm.h.gch include/utils.h.gch
 
-OBJECT_FILES := build/bind_functions.o build/command_line.o build/main.o build/menu.o build/utils.o build/tfm.o $\
+OBJECT_FILES := build/bind_functions.o build/commands.o build/command_line.o build/main.o build/menu.o build/utils.o build/tfm.o $\
 								build/termbox2.o
 
 all: check_clang ${DIRECTORIES} ${DEPENDENCIES} tfm
 
 check_clang:
 ifeq (clang,${CC})
-	$(eval PROCESSED_HEADER_FILES := $(subst .gch,.pch,${PROCESSED_HEADER_FILES}))
+	$(eval PROCESSED_HEADER_FILES := $(subst .h,.h.pch,${PROCESSED_HEADER_FILES}))
 endif
 
 ${DIRECTORIES}:
