@@ -1,4 +1,18 @@
+#include <utils.h>
 int main(void) {
+  const char* sentence = "helloworld ";
+
+  const char** words = NULL;
+  unsigned int words_count = 0;
+
+  sentence_separate(sentence, &words, &words_count);
+
+  for(unsigned int i = 0; i < words_count; i ++) {
+    printf("%s\n", words[i]);
+    free((char*) words[i]);
+  }
+  free(words);
+
   return 0;
 }
 
