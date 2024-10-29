@@ -40,35 +40,37 @@ struct Stroke {
 
 static const struct Stroke strokes[] = {
   // normal
-  { 'n', " ", menu_change_directory },
-  { 'n', "v", menu_toggle_visual_mode },
-  { 'n', ":", enter_command_mode },
+  { 'n', " ",  bind_function_menu_change_directory },
+  { 'n', "v",  bind_function_menu_toggle_visual_mode },
+  { 'n', ":",  bind_function_enter_command_mode },
 
-  { 'n', "G", menu_cursor_bottom },
-  { 'n', "gg", menu_cursor_top },
-  { 'n', "k", menu_cursor_move, { .i = -1 } },
-  { 'n', "j", menu_cursor_move, { .i = 1 } },
+  { 'n', "k",  bind_function_menu_cursor_move, { .i = -1 } },
+  { 'n', "j",  bind_function_menu_cursor_move, { .i = 1 } },
+  { 'n', "G",  bind_function_menu_cursor_move_bottom },
+  { 'n', "gg", bind_function_menu_cursor_move_top },
 
   // visual
-  { 'v', "o", menu_switch_cursor_with_selection },
-  { 'v', "i", menu_toggle_visual_mode },
+  { 'v', "o",  bind_function_menu_switch_cursor_with_selection },
+  { 'v', "i",  bind_function_menu_toggle_visual_mode },
 
-  { 'v', "G", menu_cursor_bottom },
-  { 'v', "gg", menu_cursor_top },
-  { 'v', "k", menu_cursor_move, { .i = -1 } },
-  { 'v', "j", menu_cursor_move, { .i = 1 } },
+  { 'v', "k",  bind_function_menu_cursor_move, { .i = -1 } },
+  { 'v', "j",  bind_function_menu_cursor_move, { .i = 1 } },
+  { 'v', "G",  bind_function_menu_cursor_move_bottom },
+  { 'v', "gg", bind_function_menu_cursor_move_top },
 };
 
-struct Key {
-  const char mode;
-  const uint16_t key; // TB_KEY_*
-
-  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
-  const struct Argument argument;
-};
-
+/*struct Key {*/
+/*  const char mode;*/
+/*  const uint16_t key; // TB_KEY_**/
+/**/
+/*  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);*/
+/*  const struct Argument argument;*/
+/*};*/
+/**/
 /*const struct Key keys[] = {*/
 /*  // command*/
+/*  { ':', TB_KEY_ARROW_LEFT, command_line_cursor_move, { .i = -1 } },*/
+/*  { ':', TB_KEY_ARROW_RIGHT, command_line_cursor_move, { .i = 1 } },*/
 /*};*/
 
 #endif

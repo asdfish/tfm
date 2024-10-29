@@ -5,16 +5,19 @@
 #include <menu.h>
 
 struct Argument {
-  int i;
+  const int i;
 };
 
-extern int enter_command_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_enter_command_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
 
-extern int menu_change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int menu_cursor_bottom(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int menu_cursor_top(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int menu_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int menu_switch_cursor_with_selection(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int menu_toggle_visual_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_command_line_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_command_line_submit(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+
+extern int bind_function_menu_change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_menu_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_menu_cursor_move_bottom(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_menu_cursor_move_top(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_menu_switch_cursor_with_selection(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_menu_toggle_visual_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
 
 #endif
