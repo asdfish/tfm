@@ -2,7 +2,13 @@
 #include <tfm.h>
 #include <sys/stat.h>
 
-int change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+int enter_command_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+  menu->mode = ':';
+  command_line_change_mode(command_line, ':');
+  return 0;
+}
+
+int menu_change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   struct MenuItem** menu_items = menu_get_current_items(menu);
   struct MenuItem* item = *(menu_items + menu->cursor);
 
@@ -19,13 +25,13 @@ int change_directory(struct Menu* menu, struct CommandLine* command_line, const 
   return 0;
 }
 
-int cursor_top(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+int menu_cursor_top(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   menu->cursor = 0;
 
   return 0;
 }
 
-int cursor_bottom(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+int menu_cursor_bottom(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   unsigned int menu_length = menu_get_current_items_length(menu);
 
   menu->cursor = menu_length;
@@ -33,18 +39,13 @@ int cursor_bottom(struct Menu* menu, struct CommandLine* command_line, const str
   return 0;
 }
 
-int cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+int menu_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   menu_move_cursor(menu, argument->i);
   return 0;
 }
 
-int enter_command_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
-  menu->mode = ':';
-  command_line_change_mode(command_line, ':');
-  return 0;
-}
 
-int switch_cursor_with_selection(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+int menu_switch_cursor_with_selection(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   if(menu->mode != 'v')
     return 0;
 
@@ -55,7 +56,7 @@ int switch_cursor_with_selection(struct Menu* menu, struct CommandLine* command_
   return 0;
 }
 
-int toggle_visual_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+int menu_toggle_visual_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   menu_toggle_select(menu);
   
   return 0;

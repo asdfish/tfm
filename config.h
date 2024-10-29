@@ -30,35 +30,46 @@ static const uintattr_t foregrounds_reversed[] = {
 #ifdef INCLUDE_CONFIG_BINDINGS
 #include <bind_functions.h>
 
-struct Binding {
-  char mode; // set to ' ' for all
-  const char* strokes;
+struct Stroke {
+  const char mode; // set to ' ' for all
+  const char* chars;
 
   int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
   const struct Argument argument;
 };
 
-static const struct Binding bindings[] = {
+static const struct Stroke strokes[] = {
   // normal
-  { 'n', " ", change_directory },
-  { 'n', "v", toggle_visual_mode },
+  { 'n', " ", menu_change_directory },
+  { 'n', "v", menu_toggle_visual_mode },
   { 'n', ":", enter_command_mode },
 
-  { 'n', "G", cursor_bottom },
-  { 'n', "gg", cursor_top },
-  { 'n', "k", cursor_move, { .i = -1 } },
-  { 'n', "j", cursor_move, { .i = 1 } },
+  { 'n', "G", menu_cursor_bottom },
+  { 'n', "gg", menu_cursor_top },
+  { 'n', "k", menu_cursor_move, { .i = -1 } },
+  { 'n', "j", menu_cursor_move, { .i = 1 } },
 
   // visual
+  { 'v', "o", menu_switch_cursor_with_selection },
+  { 'v', "i", menu_toggle_visual_mode },
 
-  { 'v', "o", switch_cursor_with_selection },
-  { 'v', "i", toggle_visual_mode },
-
-  { 'v', "G", cursor_bottom },
-  { 'v', "gg", cursor_top },
-  { 'v', "k", cursor_move, { .i = -1 } },
-  { 'v', "j", cursor_move, { .i = 1 } },
+  { 'v', "G", menu_cursor_bottom },
+  { 'v', "gg", menu_cursor_top },
+  { 'v', "k", menu_cursor_move, { .i = -1 } },
+  { 'v', "j", menu_cursor_move, { .i = 1 } },
 };
+
+struct Key {
+  const char mode;
+  const uint16_t key; // TB_KEY_*
+
+  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
+  const struct Argument argument;
+};
+
+/*const struct Key keys[] = {*/
+/*  // command*/
+/*};*/
 
 #endif
 

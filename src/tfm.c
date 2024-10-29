@@ -89,8 +89,8 @@ int tfm(void) {
 
   {
     unsigned int largest_stroke = 0;
-    for(unsigned int i = 0; i < ARRAY_LENGTH(bindings); i ++)
-      largest_stroke = MAX(largest_stroke, strlen(bindings[i].strokes));
+    for(unsigned int i = 0; i < ARRAY_LENGTH(strokes); i ++)
+      largest_stroke = MAX(largest_stroke, strlen(strokes[i].chars));
 
     o_string_reserve(&menu.strokes, largest_stroke);
   }
@@ -135,17 +135,21 @@ int tfm_handle_events(struct tb_event* event) {
     cat[1] = '\0';
     if(o_string_cat(&menu.strokes, cat) != O_SUCCESS)
       return -1;
+
+    if(menu.mode == ':')
+      if(command_line_add_char(&command_line, event->ch) != 0)
+        return -1;
   }
 
   bool clear_stroke = false;
   bool matches_stroke = false;
-  for(unsigned int i = 0; i < ARRAY_LENGTH(bindings); i ++)
-    if(bindings[i].mode == ' ' || menu.mode == bindings[i].mode) {
-      if(strncmp(menu.strokes.contents, bindings[i].strokes, strlen(menu.strokes.contents)) == 0)
+  for(unsigned int i = 0; i < ARRAY_LENGTH(strokes); i ++)
+    if(strokes[i].mode == ' ' || menu.mode == strokes[i].mode) {
+      if(strncmp(menu.strokes.contents, strokes[i].chars, strlen(menu.strokes.contents)) == 0)
         matches_stroke = true;
 
-      if(strcmp(menu.strokes.contents, bindings[i].strokes) == 0) {
-        if(bindings[i].function(&menu, &command_line, &bindings[i].argument) != 0)
+      if(strcmp(menu.strokes.contents, strokes[i].chars) == 0) {
+        if(strokes[i].function(&menu, &command_line, &strokes[i].argument) != 0)
           return -1;
         clear_stroke = true;
       }
