@@ -6,6 +6,8 @@
 extern struct dirent** tfm_dirents;
 extern unsigned int tfm_dirents_length;
 
+extern struct CommandLine command_line;
+
 extern struct Menu menu;
 extern struct MenuItem* tfm_menu_items;
 

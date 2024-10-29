@@ -12,7 +12,7 @@ extern int bind_function_enter_command_mode(struct Menu* menu, struct CommandLin
 
 extern int bind_function_command_line_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
 extern int bind_function_command_line_delete_char(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-/*extern int bind_function_command_line_submit(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);*/
+extern int bind_function_command_line_execute(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
 
 extern int bind_function_menu_change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
 extern int bind_function_menu_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);

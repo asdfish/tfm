@@ -101,7 +101,7 @@ int command_line_execute(struct CommandLine* command_line) {
       }
 
   unsigned int message_length = strlen(MESSAGE_COMMAND_NOT_FOUND) - 2 +
-    strlen(commands[command].name);
+    strlen(words[0]);
 
   command_line->message = (const char*) malloc((message_length + 1) * sizeof(char));
   if(command_line->message == NULL) {
@@ -109,12 +109,17 @@ int command_line_execute(struct CommandLine* command_line) {
     goto exit;
   }
   command_line->mode = ' ';
-  sprintf((char*) command_line->message, MESSAGE_COMMAND_NOT_FOUND, commands[command].name);
+  sprintf((char*) command_line->message, MESSAGE_COMMAND_NOT_FOUND, words[0]);
   goto exit;
 
 execute_command:
+  if(words_length == 1) {
+    command_line->message = strdup(MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS);
+    goto reset_mode;
+  }
+
   bool refresh_menu = false;
-  if(commands[command].function(words, words_length, &refresh_menu, (char**) &command_line->message) != 0) {
+  if(commands[command].function(words + 1, words_length - 1, &refresh_menu, (char**) &command_line->message) != 0) {
     exit_code = -1;
     goto exit;
   }
@@ -125,8 +130,8 @@ execute_command:
       goto exit;
     }
 
+reset_mode:
   command_line->mode = ' ';
-
 exit:
   for(unsigned int i = 0; i < words_length; i ++) {
     free((char*) words[i]);
@@ -134,6 +139,8 @@ exit:
   }
   free(words);
   words = NULL;
+
+  o_string_clear(&command_line->command);
   return exit_code;
 }
 

@@ -73,6 +73,7 @@ static const struct BindingKey binding_keys[] = {
   { ':', TB_KEY_ARROW_RIGHT, bind_function_command_line_cursor_move, { .i = 1 } },
   { ':', TB_KEY_BACKSPACE,   bind_function_command_line_delete_char },
   { ':', TB_KEY_BACKSPACE2,  bind_function_command_line_delete_char },
+  { ':', TB_KEY_ENTER,       bind_function_command_line_execute },
 };
 
 #endif
@@ -83,6 +84,7 @@ static const struct BindingKey binding_keys[] = {
 #include <stdbool.h>
 
 #define MESSAGE_COMMAND_NOT_FOUND "Command %s not found."
+#define MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS "Not enough arguments were submitted."
 #define MESSAGE_CREATE_PATHS "Successfully created %u/%u paths."
 
 struct Command {
