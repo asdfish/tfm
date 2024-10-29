@@ -9,6 +9,7 @@ struct Argument {
 };
 
 extern int bind_function_enter_command_mode(const struct Argument* argument);
+extern int bind_function_exit_command_mode(const struct Argument* argument);
 
 extern int bind_function_command_line_cursor_move(const struct Argument* argument);
 extern int bind_function_command_line_delete_char(const struct Argument* argument);

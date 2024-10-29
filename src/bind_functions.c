@@ -8,6 +8,14 @@ int bind_function_enter_command_mode(const struct Argument* argument) {
   return 0;
 }
 
+int bind_function_exit_command_mode(const struct Argument* argument) {
+  menu.mode = 'n';
+
+  command_line.mode = ' ';
+  o_string_clear(&command_line.command);
+  return 0;
+}
+
 int bind_function_command_line_cursor_move(const struct Argument* argument) {
   command_line_move_cursor(&command_line, argument->i);
   return 0;

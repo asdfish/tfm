@@ -15,6 +15,8 @@ struct CommandLine command_line;
 struct Menu menu;
 struct MenuItem* tfm_menu_items = NULL;
 
+bool run = true;
+
 int tfm_change_directory(const char* path) {
   if(tfm_dirents != NULL) {
     for(unsigned int i = 0; i < tfm_dirents_length; i ++) {
@@ -95,16 +97,13 @@ int tfm(void) {
     o_string_reserve(&menu.strokes, largest_stroke);
   }
 
-  while(true) {
+  while(run) {
     command_line_draw(&command_line);
     menu_draw(&menu);
     tb_present();
 
     struct tb_event event;
     tb_poll_event(&event);
-
-    if(event.ch == 'q')
-      break;
 
     if(tfm_handle_events(&event) != 0)
       break;

@@ -2,11 +2,19 @@
 #include <config.h>
 #include <commands.h>
 #include <macros.h>
+#include <tfm.h>
 #include <utils.h>
 #include <stddef.h>
 #include <stdio.h>
 
-int create_paths(const char** paths, unsigned int paths_length, bool* refresh, char** message) {
+int command_create_paths(const char** paths, unsigned int paths_length, bool* refresh, char** message) {
+  if(paths_length == 0) {
+    *message = strdup(MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS);
+    if(*message == NULL)
+      return -1;
+    return 0;
+  }
+
   unsigned int successes = 0;
   for(unsigned int i = 0; i < paths_length; i ++)
     if(create_path(paths[i]) == 0)
@@ -23,5 +31,10 @@ int create_paths(const char** paths, unsigned int paths_length, bool* refresh, c
   sprintf(*message, MESSAGE_CREATE_PATHS, successes, paths_length);
 
   *refresh = true;
+  return 0;
+}
+
+int command_quit(const char** argv, unsigned int argc, bool* refresh, char** message) {
+  run = false;
   return 0;
 }

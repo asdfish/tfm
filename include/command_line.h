@@ -21,6 +21,7 @@ extern void command_line_change_mode(struct CommandLine* command_line, char mode
 extern int command_line_delete_char(struct CommandLine* command_line);
 extern void command_line_draw(struct CommandLine* command_line);
 extern int command_line_execute(struct CommandLine* command_line);
+extern int command_line_execute_command_mode(struct CommandLine* command_line);
 extern int command_line_init(struct CommandLine* command_line);
 extern void command_line_move_cursor(struct CommandLine* command_line, int step);
 extern void command_line_uninit(struct CommandLine* command_line);

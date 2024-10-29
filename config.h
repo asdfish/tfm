@@ -69,6 +69,7 @@ struct BindingKey {
 
 static const struct BindingKey binding_keys[] = {
   // command
+  { ':', TB_KEY_ESC,         bind_function_exit_command_mode },
   { ':', TB_KEY_ARROW_LEFT,  bind_function_command_line_cursor_move, { .i = -1 } },
   { ':', TB_KEY_ARROW_RIGHT, bind_function_command_line_cursor_move, { .i = 1 } },
   { ':', TB_KEY_BACKSPACE,   bind_function_command_line_delete_char },
@@ -94,7 +95,8 @@ struct Command {
 };
 
 static const struct Command commands[] = {
-  { "create_paths", create_paths }
+  { "create_paths", command_create_paths },
+  { "quit", command_quit },
 };
 
 #endif

@@ -81,9 +81,15 @@ void command_line_draw(struct CommandLine* command_line) {
 }
 
 int command_line_execute(struct CommandLine* command_line) {
-  if(command_line->mode != ':')
-    return 0;
+  switch(command_line->mode) {
+    case ':':
+      return command_line_execute_command_mode(command_line);
+  }
 
+  return 0;
+}
+
+int command_line_execute_command_mode(struct CommandLine* command_line) {
   const char** words = NULL;
   unsigned int words_length = 0;
 
@@ -113,11 +119,6 @@ int command_line_execute(struct CommandLine* command_line) {
   goto exit;
 
 execute_command:
-  if(words_length == 1) {
-    command_line->message = strdup(MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS);
-    goto reset_mode;
-  }
-
   bool refresh_menu = false;
   if(commands[command].function(words + 1, words_length - 1, &refresh_menu, (char**) &command_line->message) != 0) {
     exit_code = -1;
@@ -130,7 +131,6 @@ execute_command:
       goto exit;
     }
 
-reset_mode:
   command_line->mode = ' ';
 exit:
   for(unsigned int i = 0; i < words_length; i ++) {
