@@ -31,7 +31,6 @@ struct Menu {
 extern int menu_change_filtered_items(struct Menu* menu, const char* filter);
 extern int menu_change_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length);
 extern void menu_draw(struct Menu* menu);
-extern void menu_free(struct Menu* menu);
 extern void menu_free_filtered_items(struct Menu* menu);
 extern void menu_free_items(struct Menu* menu);
 extern int menu_init(struct Menu* menu);
@@ -42,6 +41,7 @@ extern void menu_move_cursor(struct Menu* menu, int step);
 extern int menu_set_filtered_items(struct Menu* menu, const char* filter);
 extern int menu_set_items(struct Menu* menu, struct MenuItem* items, unsigned int items_length);
 extern void menu_toggle_select(struct Menu* menu);
+extern void menu_uninit(struct Menu* menu);
 extern void menu_verify_cursor_position(struct Menu* menu);
 
 #endif

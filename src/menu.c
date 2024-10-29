@@ -77,13 +77,6 @@ void menu_draw(struct Menu* menu) {
   }
 }
 
-void menu_free(struct Menu* menu) {
-  o_string_uninit(&menu->strokes);
-
-  menu_free_filtered_items(menu);
-  menu_free_items(menu);
-}
-
 void menu_free_filtered_items(struct Menu* menu) {
   if(menu->filtered_items == NULL)
     return;
@@ -200,6 +193,13 @@ void menu_toggle_select(struct Menu* menu) {
 
   menu->mode = menu->mode == 'v' ? 'n' : 'v';
   menu->selection = menu->cursor;
+}
+
+void menu_uninit(struct Menu* menu) {
+  o_string_uninit(&menu->strokes);
+
+  menu_free_filtered_items(menu);
+  menu_free_items(menu);
 }
 
 void menu_verify_cursor_position(struct Menu* menu) {

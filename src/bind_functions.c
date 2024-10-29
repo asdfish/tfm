@@ -13,6 +13,10 @@ int bind_function_command_line_cursor_move(struct Menu* menu, struct CommandLine
   return 0;
 }
 
+int bind_function_command_line_delete_char(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
+  return command_line_delete_char(command_line);
+}
+
 int bind_function_menu_change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument) {
   struct MenuItem** menu_items = menu_get_current_items(menu);
   struct MenuItem* item = *(menu_items + menu->cursor);

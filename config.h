@@ -71,6 +71,8 @@ static const struct BindingKey binding_keys[] = {
   // command
   { ':', TB_KEY_ARROW_LEFT,  bind_function_command_line_cursor_move, { .i = -1 } },
   { ':', TB_KEY_ARROW_RIGHT, bind_function_command_line_cursor_move, { .i = 1 } },
+  { ':', TB_KEY_BACKSPACE,   bind_function_command_line_delete_char },
+  { ':', TB_KEY_BACKSPACE2,  bind_function_command_line_delete_char },
 };
 
 #endif

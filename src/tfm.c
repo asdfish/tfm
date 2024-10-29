@@ -111,13 +111,13 @@ int tfm(void) {
   }
 
   command_line_uninit(&command_line);
-  menu_free(&menu);
+  menu_uninit(&menu);
   tb_shutdown();
 
   return 0;
 
 menu_free:
-  menu_free(&menu);
+  menu_uninit(&menu);
 tb_shutdown:
   tb_shutdown();
   if(error != NULL)
