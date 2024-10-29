@@ -34,7 +34,7 @@ struct BindingStroke {
   const char mode; // set to ' ' for all
   const char* chars;
 
-  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
+  int (*function) (const struct Argument*);
   const struct Argument argument;
 };
 
@@ -63,7 +63,7 @@ struct BindingKey {
   const char mode;
   const uint16_t key; // TB_KEY_*
 
-  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
+  int (*function) (const struct Argument*);
   const struct Argument argument;
 };
 

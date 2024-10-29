@@ -153,7 +153,7 @@ int tfm_handle_events(struct tb_event* event) {
         matches_stroke = true;
 
       if(strcmp(menu.strokes.contents, binding_strokes[i].chars) == 0) {
-        if(binding_strokes[i].function(&menu, &command_line, &binding_strokes[i].argument) != 0)
+        if(binding_strokes[i].function(&binding_strokes[i].argument) != 0)
           return -1;
         clear_stroke = true;
       }
@@ -168,7 +168,7 @@ int tfm_handle_events(struct tb_event* event) {
   // keys
   for(unsigned int i = 0; i < ARRAY_LENGTH(binding_keys); i ++)
     if(menu.mode == binding_keys[i].mode && event->key == binding_keys[i].key)
-      if(binding_keys[i].function(&menu, &command_line, &binding_keys[i].argument) != 0)
+      if(binding_keys[i].function(&binding_keys[i].argument) != 0)
         return -1;
 
   return 0;

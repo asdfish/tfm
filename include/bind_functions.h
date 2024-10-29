@@ -8,17 +8,17 @@ struct Argument {
   const int i;
 };
 
-extern int bind_function_enter_command_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_enter_command_mode(const struct Argument* argument);
 
-extern int bind_function_command_line_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_command_line_delete_char(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_command_line_execute(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_command_line_cursor_move(const struct Argument* argument);
+extern int bind_function_command_line_delete_char(const struct Argument* argument);
+extern int bind_function_command_line_execute(const struct Argument* argument);
 
-extern int bind_function_menu_change_directory(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_menu_cursor_move(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_menu_cursor_move_bottom(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_menu_cursor_move_top(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_menu_switch_cursor_with_selection(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
-extern int bind_function_menu_toggle_visual_mode(struct Menu* menu, struct CommandLine* command_line, const struct Argument* argument);
+extern int bind_function_menu_change_directory(const struct Argument* argument);
+extern int bind_function_menu_cursor_move(const struct Argument* argument);
+extern int bind_function_menu_cursor_move_bottom(const struct Argument* argument);
+extern int bind_function_menu_cursor_move_top(const struct Argument* argument);
+extern int bind_function_menu_switch_cursor_with_selection(const struct Argument* argument);
+extern int bind_function_menu_toggle_visual_mode(const struct Argument* argument);
 
 #endif
