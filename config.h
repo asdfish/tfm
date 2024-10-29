@@ -34,21 +34,30 @@ struct Binding {
   char mode; // set to ' ' for all
   const char* strokes;
 
-  int (*function) (struct Menu* menu, const struct Argument*);
+  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
   const struct Argument argument;
 };
 
 static const struct Binding bindings[] = {
+  // normal
   { 'n', " ", change_directory },
   { 'n', "v", toggle_visual_mode },
+  { 'n', ":", enter_command_mode },
+
+  { 'n', "G", cursor_bottom },
+  { 'n', "gg", cursor_top },
+  { 'n', "k", cursor_move, { .i = -1 } },
+  { 'n', "j", cursor_move, { .i = 1 } },
+
+  // visual
 
   { 'v', "o", switch_cursor_with_selection },
   { 'v', "i", toggle_visual_mode },
 
-  { ' ', "G", cursor_bottom },
-  { ' ', "gg", cursor_top },
-  { ' ', "k", cursor_move, { .i = -1 } },
-  { ' ', "j", cursor_move, { .i = 1 } },
+  { 'v', "G", cursor_bottom },
+  { 'v', "gg", cursor_top },
+  { 'v', "k", cursor_move, { .i = -1 } },
+  { 'v', "j", cursor_move, { .i = 1 } },
 };
 
 #endif

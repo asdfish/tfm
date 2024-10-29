@@ -28,7 +28,7 @@ extern void command_line_verify_cursor_position(struct CommandLine* command_line
 
 inline void command_line_free_message(struct CommandLine* command_line) {
   if(command_line->message != NULL) {
-    free(command_line->message);
+    free((char*) command_line->message);
     command_line->message = NULL;
   }
 }

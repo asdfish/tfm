@@ -10,6 +10,8 @@
 struct dirent** tfm_dirents = NULL;
 unsigned int tfm_dirents_length = 0;
 
+struct CommandLine command_line;
+
 struct Menu menu;
 struct MenuItem* tfm_menu_items = NULL;
 
@@ -54,7 +56,15 @@ exit_failure:
 }
 
 int tfm(void) {
+  const char* error= NULL;
+
   tb_init();
+
+  command_line.x = 0;
+  command_line.foreground = TB_WHITE;
+  command_line.foreground_reversed = TB_BLACK;
+  command_line.background = TB_BLACK;
+  command_line.background_reversed = TB_WHITE;
 
   menu.x = 0;
   menu.y = 0;
@@ -63,15 +73,18 @@ int tfm(void) {
   tfm_handle_resize();
 
   if(menu_init(&menu) != 0) {
-    tb_shutdown();
-    perror("menu_init");
-    return -1;
+    error = "menu_init";
+    goto tb_shutdown;
   }
 
   if(tfm_change_directory(".") != 0) {
-    tb_shutdown();
-    perror("tfm_change_directory");
-    return -1;
+    error = "tfm_change_directory";
+    goto menu_free;
+  }
+
+  if(command_line_init(&command_line) != 0) {
+    error = "command_line_init";
+    goto menu_free;
   }
 
   {
@@ -82,8 +95,8 @@ int tfm(void) {
     o_string_reserve(&menu.strokes, largest_stroke);
   }
 
-
   while(true) {
+    command_line_draw(&command_line);
     menu_draw(&menu);
     tb_present();
 
@@ -97,10 +110,19 @@ int tfm(void) {
       break;
   }
 
-  tb_shutdown();
   menu_free(&menu);
+  tb_shutdown();
 
   return 0;
+
+menu_free:
+  menu_free(&menu);
+tb_shutdown:
+  tb_shutdown();
+  if(error != NULL)
+    perror(error);
+
+  return -1;
 }
 
 int tfm_handle_events(struct tb_event* event) {
@@ -123,7 +145,7 @@ int tfm_handle_events(struct tb_event* event) {
         matches_stroke = true;
 
       if(strcmp(menu.strokes.contents, bindings[i].strokes) == 0) {
-        if(bindings[i].function(&menu, &bindings[i].argument) != 0)
+        if(bindings[i].function(&menu, &command_line, &bindings[i].argument) != 0)
           return -1;
         clear_stroke = true;
       }
@@ -142,6 +164,11 @@ void tfm_handle_resize(void) {
   int terminal_width = tb_width();
   int terminal_height = tb_height();
 
-  menu.width = terminal_width > 0 ? terminal_width : 0;
-  menu.height = terminal_height > 0 ? terminal_height : 0;
+  unsigned int width = terminal_width > 0 ? terminal_width : 0;
+
+  command_line.y = terminal_height > 0 ? terminal_height - 1 : 0;
+  command_line.width = width;
+
+  menu.width = width;
+  menu.height = terminal_height > 0 ? terminal_height - 1 : 0;
 }

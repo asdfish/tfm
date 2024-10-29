@@ -146,7 +146,7 @@ int command_line_init(struct CommandLine* command_line) {
   command_line->cursor = 0;
 
   command_line->message = NULL;
-  command_line->mode = ':';
+  command_line->mode = ' ';
 
   return 0;
 }
