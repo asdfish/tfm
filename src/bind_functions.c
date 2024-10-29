@@ -2,9 +2,15 @@
 #include <tfm.h>
 #include <sys/stat.h>
 
-int bind_function_enter_command_mode(const struct Argument* argument) {
-  menu.mode = ':';
-  command_line_change_mode(&command_line, ':');
+int bind_function_change_command_line_mode(const struct Argument* argument) {
+  menu.mode = argument->c;
+  command_line_change_mode(&command_line, argument->c);
+  return 0;
+}
+
+int bind_function_change_command_line_mode_with(const struct Argument* argument) {
+  bind_function_change_command_line_mode(argument);
+  o_string_set(&command_line.command, argument->str);
   return 0;
 }
 

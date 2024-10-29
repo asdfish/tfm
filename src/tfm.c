@@ -58,7 +58,7 @@ exit_failure:
 }
 
 int tfm(void) {
-  const char* error= NULL;
+  const char* error = NULL;
 
   tb_init();
 
@@ -139,7 +139,7 @@ int tfm_handle_events(struct tb_event* event) {
     if(o_string_cat(&menu.strokes, cat) != O_SUCCESS)
       return -1;
 
-    if(menu.mode == ':')
+    if(menu.mode == ':' || menu.mode == '/')
       if(command_line_add_char(&command_line, event->ch) != 0)
         return -1;
   }

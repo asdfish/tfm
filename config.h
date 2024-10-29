@@ -42,7 +42,8 @@ static const struct BindingStroke binding_strokes[] = {
   // normal
   { 'n', " ",  bind_function_menu_change_directory },
   { 'n', "v",  bind_function_menu_toggle_visual_mode },
-  { 'n', ":",  bind_function_enter_command_mode },
+  { 'n', ":",  bind_function_change_command_line_mode, { .c = ':' } },
+  { 'n', "/",  bind_function_change_command_line_mode, { .c = '/' } },
 
   { 'n', "k",  bind_function_menu_cursor_move, { .i = -1 } },
   { 'n', "j",  bind_function_menu_cursor_move, { .i = 1 } },
@@ -69,6 +70,12 @@ struct BindingKey {
 
 static const struct BindingKey binding_keys[] = {
   // command
+  { '/', TB_KEY_ESC,         bind_function_exit_command_mode },
+  { '/', TB_KEY_ARROW_LEFT,  bind_function_command_line_cursor_move, { .i = -1 } },
+  { '/', TB_KEY_ARROW_RIGHT, bind_function_command_line_cursor_move, { .i = 1 } },
+  { '/', TB_KEY_BACKSPACE,   bind_function_command_line_delete_char },
+  { '/', TB_KEY_BACKSPACE2,  bind_function_command_line_delete_char },
+  { '/', TB_KEY_ENTER,       bind_function_command_line_execute },
   { ':', TB_KEY_ESC,         bind_function_exit_command_mode },
   { ':', TB_KEY_ARROW_LEFT,  bind_function_command_line_cursor_move, { .i = -1 } },
   { ':', TB_KEY_ARROW_RIGHT, bind_function_command_line_cursor_move, { .i = 1 } },

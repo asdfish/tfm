@@ -6,9 +6,11 @@
 
 struct Argument {
   const int i;
+  const char c;
+  const char* str;
 };
 
-extern int bind_function_enter_command_mode(const struct Argument* argument);
+extern int bind_function_change_command_line_mode(const struct Argument* argument);
 extern int bind_function_exit_command_mode(const struct Argument* argument);
 
 extern int bind_function_command_line_cursor_move(const struct Argument* argument);

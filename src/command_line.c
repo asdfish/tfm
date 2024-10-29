@@ -5,6 +5,8 @@
 #include <tfm.h>
 #include <utils.h>
 
+int command_line_execute_command_mode(struct CommandLine* command_line);
+
 int command_line_add_char(struct CommandLine* command_line, char new_char) {
   char insert[2] = " \0";
   insert[0] = new_char;
@@ -16,6 +18,8 @@ int command_line_add_char(struct CommandLine* command_line, char new_char) {
 
   command_line_move_cursor(command_line, 1);
 
+  if(command_line->mode == '/')
+    menu_set_filtered_items(&menu, command_line->command.contents);
   return 0;
 }
 
@@ -32,6 +36,8 @@ int command_line_delete_char(struct CommandLine* command_line) {
       return result;
   }
 
+  if(command_line->mode == '/')
+    menu_set_filtered_items(&menu, command_line->command.contents);
   return 0;
 }
 
@@ -84,6 +90,11 @@ int command_line_execute(struct CommandLine* command_line) {
   switch(command_line->mode) {
     case ':':
       return command_line_execute_command_mode(command_line);
+    case '/':
+      menu.mode = 'n';
+      command_line->mode = ' ';
+      o_string_clear(&command_line->command);
+      break;
   }
 
   return 0;
