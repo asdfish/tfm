@@ -10,9 +10,10 @@
 struct dirent** tfm_dirents = NULL;
 unsigned int tfm_dirents_length = 0;
 
+struct Menu menu;
 struct MenuItem* tfm_menu_items = NULL;
 
-int tfm_change_directory(struct Menu* menu, const char* path) {
+int tfm_change_directory(const char* path) {
   if(tfm_dirents != NULL) {
     for(unsigned int i = 0; i < tfm_dirents_length; i ++) {
       free(tfm_dirents[i]);
@@ -32,14 +33,14 @@ int tfm_change_directory(struct Menu* menu, const char* path) {
   if(dirents_to_menu_items(tfm_dirents, tfm_dirents_length, &tfm_menu_items) != 0)
     goto free_tfm_dirents;
 
-  menu_free_items(menu);
-  if(menu_set_items(menu, tfm_menu_items, tfm_dirents_length) != 0)
+  menu_free_items(&menu);
+  if(menu_set_items(&menu, tfm_menu_items, tfm_dirents_length) != 0)
     goto free_tfm_menu_items;
 
   return 0;
 
 free_tfm_menu_items:
-  menu_free_items(menu);
+  menu_free_items(&menu);
 
 free_tfm_dirents:
   for(unsigned int i = 0; i < tfm_dirents_length; i ++) { 
@@ -55,12 +56,11 @@ exit_failure:
 int tfm(void) {
   tb_init();
 
-  struct Menu menu;
   menu.x = 0;
   menu.y = 0;
   menu.background = TB_BLACK;
   menu.background_reversed = TB_WHITE;
-  tfm_handle_resize(&menu);
+  tfm_handle_resize();
 
   if(menu_init(&menu) != 0) {
     tb_shutdown();
@@ -68,7 +68,7 @@ int tfm(void) {
     return -1;
   }
 
-  if(tfm_change_directory(&menu, ".") != 0) {
+  if(tfm_change_directory(".") != 0) {
     tb_shutdown();
     perror("tfm_change_directory");
     return -1;
@@ -93,7 +93,7 @@ int tfm(void) {
     if(event.ch == 'q')
       break;
 
-    if(tfm_handle_events(&menu, &event) != 0)
+    if(tfm_handle_events(&event) != 0)
       break;
   }
 
@@ -103,27 +103,27 @@ int tfm(void) {
   return 0;
 }
 
-int tfm_handle_events(struct Menu* menu, struct tb_event* event) {
+int tfm_handle_events(struct tb_event* event) {
   if(event->type == TB_EVENT_RESIZE)
-    tfm_handle_resize(menu);
+    tfm_handle_resize();
 
   if(event->ch < UCHAR_MAX) {
     char cat[2];
     cat[0] = event->ch;
     cat[1] = '\0';
-    if(o_string_cat(&menu->strokes, cat) != O_SUCCESS)
+    if(o_string_cat(&menu.strokes, cat) != O_SUCCESS)
       return -1;
   }
 
   bool clear_stroke = false;
   bool matches_stroke = false;
   for(unsigned int i = 0; i < ARRAY_LENGTH(bindings); i ++)
-    if(bindings[i].mode == ' ' || menu->mode == bindings[i].mode) {
-      if(strncmp(menu->strokes.contents, bindings[i].strokes, strlen(menu->strokes.contents)) == 0)
+    if(bindings[i].mode == ' ' || menu.mode == bindings[i].mode) {
+      if(strncmp(menu.strokes.contents, bindings[i].strokes, strlen(menu.strokes.contents)) == 0)
         matches_stroke = true;
 
-      if(strcmp(menu->strokes.contents, bindings[i].strokes) == 0) {
-        if(bindings[i].function(menu, &bindings[i].argument) != 0)
+      if(strcmp(menu.strokes.contents, bindings[i].strokes) == 0) {
+        if(bindings[i].function(&menu, &bindings[i].argument) != 0)
           return -1;
         clear_stroke = true;
       }
@@ -133,15 +133,15 @@ int tfm_handle_events(struct Menu* menu, struct tb_event* event) {
     clear_stroke = true;
 
   if(clear_stroke)
-    o_string_clear(&menu->strokes);
+    o_string_clear(&menu.strokes);
 
   return 0;
 }
 
-void tfm_handle_resize(struct Menu* menu) {
+void tfm_handle_resize(void) {
   int terminal_width = tb_width();
   int terminal_height = tb_height();
 
-  menu->width = terminal_width > 0 ? terminal_width : 0;
-  menu->height = terminal_height > 0 ? terminal_height : 0;
+  menu.width = terminal_width > 0 ? terminal_width : 0;
+  menu.height = terminal_height > 0 ? terminal_height : 0;
 }

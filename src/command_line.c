@@ -2,6 +2,7 @@
 #include <command_line.h>
 #include <config.h>
 #include <macros.h>
+#include <tfm.h>
 #include <utils.h>
 
 int command_line_add_char(struct CommandLine* command_line, char new_char) {
@@ -16,6 +17,12 @@ int command_line_add_char(struct CommandLine* command_line, char new_char) {
   command_line_move_cursor(command_line, 1);
 
   return 0;
+}
+
+void command_line_change_mode(struct CommandLine* command_line, char mode) {
+  command_line_free_message(command_line);
+
+  command_line->mode = mode;
 }
 
 int command_line_delete_char(struct CommandLine* command_line) {
@@ -73,7 +80,7 @@ void command_line_draw(struct CommandLine* command_line) {
   tb_set_cell(command_line->x, command_line->y, command_line->mode, command_line->foreground, command_line->background);
 }
 
-int command_line_execute(struct CommandLine* command_line, bool* refresh_menu) {
+int command_line_execute(struct CommandLine* command_line) {
   if(command_line->mode != ':')
     return 0;
 
@@ -106,10 +113,18 @@ int command_line_execute(struct CommandLine* command_line, bool* refresh_menu) {
   goto exit;
 
 execute_command:
-  if(commands[command].function(words, words_length, refresh_menu, (char**) &command_line->message) != 0) {
+  bool refresh_menu = false;
+  if(commands[command].function(words, words_length, &refresh_menu, (char**) &command_line->message) != 0) {
     exit_code = -1;
     goto exit;
   }
+
+  if(refresh_menu)
+    if(tfm_change_directory(".") != 0) {
+      exit_code = -1;
+      goto exit;
+    }
+
   command_line->mode = ' ';
 
 exit:
@@ -148,10 +163,7 @@ void command_line_move_cursor(struct CommandLine* command_line, int step) {
 void command_line_uninit(struct CommandLine* command_line) {
   o_string_uninit(&command_line->command);
 
-  if(command_line->message != NULL) {
-    free(command_line->message);
-    command_line->message = NULL;
-  }
+  command_line_free_message(command_line);
 }
 
 void command_line_verify_cursor_position(struct CommandLine* command_line) {
