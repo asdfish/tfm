@@ -1,5 +1,4 @@
 #define INCLUDE_CONFIG_FOREGROUNDS
-#define INCLUDE_CONFIG_BINDINGS
 #include <config.h>
 #include <macros.h>
 #include <utils.h>

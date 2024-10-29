@@ -30,7 +30,7 @@ static const uintattr_t foregrounds_reversed[] = {
 #ifdef INCLUDE_CONFIG_BINDINGS
 #include <bind_functions.h>
 
-struct Stroke {
+struct BindingStroke {
   const char mode; // set to ' ' for all
   const char* chars;
 
@@ -38,7 +38,7 @@ struct Stroke {
   const struct Argument argument;
 };
 
-static const struct Stroke strokes[] = {
+static const struct BindingStroke binding_strokes[] = {
   // normal
   { 'n', " ",  bind_function_menu_change_directory },
   { 'n', "v",  bind_function_menu_toggle_visual_mode },
@@ -59,19 +59,19 @@ static const struct Stroke strokes[] = {
   { 'v', "gg", bind_function_menu_cursor_move_top },
 };
 
-/*struct Key {*/
-/*  const char mode;*/
-/*  const uint16_t key; // TB_KEY_**/
-/**/
-/*  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);*/
-/*  const struct Argument argument;*/
-/*};*/
-/**/
-/*const struct Key keys[] = {*/
-/*  // command*/
-/*  { ':', TB_KEY_ARROW_LEFT, command_line_cursor_move, { .i = -1 } },*/
-/*  { ':', TB_KEY_ARROW_RIGHT, command_line_cursor_move, { .i = 1 } },*/
-/*};*/
+struct BindingKey {
+  const char mode;
+  const uint16_t key; // TB_KEY_*
+
+  int (*function) (struct Menu*, struct CommandLine*, const struct Argument*);
+  const struct Argument argument;
+};
+
+static const struct BindingKey binding_keys[] = {
+  // command
+  { ':', TB_KEY_ARROW_LEFT,  bind_function_command_line_cursor_move, { .i = -1 } },
+  { ':', TB_KEY_ARROW_RIGHT, bind_function_command_line_cursor_move, { .i = 1 } },
+};
 
 #endif
 

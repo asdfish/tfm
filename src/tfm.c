@@ -89,8 +89,8 @@ int tfm(void) {
 
   {
     unsigned int largest_stroke = 0;
-    for(unsigned int i = 0; i < ARRAY_LENGTH(strokes); i ++)
-      largest_stroke = MAX(largest_stroke, strlen(strokes[i].chars));
+    for(unsigned int i = 0; i < ARRAY_LENGTH(binding_strokes); i ++)
+      largest_stroke = MAX(largest_stroke, strlen(binding_strokes[i].chars));
 
     o_string_reserve(&menu.strokes, largest_stroke);
   }
@@ -110,6 +110,7 @@ int tfm(void) {
       break;
   }
 
+  command_line_uninit(&command_line);
   menu_free(&menu);
   tb_shutdown();
 
@@ -126,10 +127,13 @@ tb_shutdown:
 }
 
 int tfm_handle_events(struct tb_event* event) {
-  if(event->type == TB_EVENT_RESIZE)
+  if(event->type == TB_EVENT_RESIZE) {
     tfm_handle_resize();
+    return 0;
+  }
 
-  if(event->ch < UCHAR_MAX) {
+  // strokes
+  if(event->ch != 0) {
     char cat[2];
     cat[0] = event->ch;
     cat[1] = '\0';
@@ -143,13 +147,13 @@ int tfm_handle_events(struct tb_event* event) {
 
   bool clear_stroke = false;
   bool matches_stroke = false;
-  for(unsigned int i = 0; i < ARRAY_LENGTH(strokes); i ++)
-    if(strokes[i].mode == ' ' || menu.mode == strokes[i].mode) {
-      if(strncmp(menu.strokes.contents, strokes[i].chars, strlen(menu.strokes.contents)) == 0)
+  for(unsigned int i = 0; i < ARRAY_LENGTH(binding_strokes); i ++)
+    if(binding_strokes[i].mode == ' ' || menu.mode == binding_strokes[i].mode) {
+      if(strncmp(menu.strokes.contents, binding_strokes[i].chars, strlen(menu.strokes.contents)) == 0)
         matches_stroke = true;
 
-      if(strcmp(menu.strokes.contents, strokes[i].chars) == 0) {
-        if(strokes[i].function(&menu, &command_line, &strokes[i].argument) != 0)
+      if(strcmp(menu.strokes.contents, binding_strokes[i].chars) == 0) {
+        if(binding_strokes[i].function(&menu, &command_line, &binding_strokes[i].argument) != 0)
           return -1;
         clear_stroke = true;
       }
@@ -160,6 +164,12 @@ int tfm_handle_events(struct tb_event* event) {
 
   if(clear_stroke)
     o_string_clear(&menu.strokes);
+
+  // keys
+  for(unsigned int i = 0; i < ARRAY_LENGTH(binding_keys); i ++)
+    if(menu.mode == binding_keys[i].mode && event->key == binding_keys[i].key)
+      if(binding_keys[i].function(&menu, &command_line, &binding_keys[i].argument) != 0)
+        return -1;
 
   return 0;
 }
