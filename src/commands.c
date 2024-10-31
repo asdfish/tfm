@@ -2,8 +2,9 @@
 #include <config.h>
 #include <commands.h>
 #include <macros.h>
+#include <utils/filesystem.h>
+#include <utils/string.h>
 #include <tfm.h>
-#include <utils.h>
 #include <stddef.h>
 #include <stdio.h>
 

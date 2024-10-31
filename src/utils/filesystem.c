@@ -1,12 +1,13 @@
-#define INCLUDE_CONFIG_FOREGROUNDS
+#define _DEFAULT_SOURCE
+#define _XOPEN_SOURCE 500
 #include <config.h>
-#include <macros.h>
-#include <utils.h>
+#include <utils/filesystem.h>
+#include <utils/string.h>
 #include <orchestra.h>
-#include <limits.h>
+#include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
 
 int create_file(const char* path) {
   if(path_exists(path))
@@ -91,20 +92,6 @@ free_paths:
   return exit_code;
 }
 
-int dirents_to_menu_items(struct dirent** dirents, unsigned int dirents_length, struct MenuItem** output) {
-  *output = (struct MenuItem*) malloc(dirents_length * sizeof(struct MenuItem));
-  if(*output == NULL)
-    return -1;
-
-  for(unsigned int i = 0; i < dirents_length; i ++) {
-    (*output)[i].contents = dirents[i]->d_name;
-    (*output)[i].foreground = foregrounds[dirents[i]->d_type];
-    (*output)[i].foreground_reversed = foregrounds_reversed[dirents[i]->d_type];
-  }
-
-  return 0;
-}
-
 int get_dirents(const char* path, struct dirent*** output, unsigned int* output_length) {
   DIR* directory_pointer = NULL;
   if((directory_pointer = opendir(path)) == NULL)
@@ -152,86 +139,6 @@ free_output:
   *output = NULL;
 failure_exit:
   return -1;
-}
-
-int get_dirent_names_recursive(const char* path, const char*** output, unsigned int* output_length) {
-
-
-  return 0;
-}
-
-int sentence_separate(const char* sentence, const char*** output, unsigned int* output_length) {
-  if(strstr(sentence, " ") == NULL) {
-    *output = (const char**) malloc(sizeof(const char*));
-    if(*output == NULL)
-      goto single_word_exit_failure;
-
-    (*output)[0] = strdup(sentence);
-    if((*output)[0] == NULL)
-      goto single_word_free_output;
-
-    *output_length = 1;
-    return 0;
-
-single_word_free_output:
-    free((char**) *output);
-    *output = NULL;
-
-single_word_exit_failure:
-    return -1;
-  }
-
-  unsigned int words_count = string_count(sentence, " ") + 1;
-  *output_length = words_count;
-
-  *output = (const char**) malloc(words_count * sizeof(const char*));
-  if(*output == NULL)
-    goto exit_failure;
-
-  char* sentence_copy = strdup(sentence);
-  if(sentence_copy == NULL)
-    goto free_output;
-
-  char* sentence_copy_pointer = sentence_copy;
-
-  char* word = NULL;
-  unsigned int i = 0;
-  while((word = strsep(&sentence_copy_pointer, " ")) != NULL) {
-    (*output)[i] = strdup(word);
-    if((*output)[i] == NULL)
-      goto free_output_contents;
-    i ++;
-  }
-
-  free(sentence_copy);
-  sentence_copy = NULL;
-
-  return 0;
-
-free_output_contents:
-  for(unsigned int j = 0; j < i; j ++) {
-    free((char*) (*output)[i]);
-    (*output)[i] = NULL;
-  }
-  free(sentence_copy);
-  sentence_copy = NULL;
-free_output:
-  free((char**) *output);
-  *output = NULL;
-exit_failure:
-  return -1;
-}
-
-unsigned int string_count(const char* string, const char* query) {
-  unsigned int count = 0;
-
-  char* string_pointer = (char*) string;
-  while((string_pointer = strstr(string_pointer, query)) != NULL) {
-    string_pointer ++;
-    count ++;
-  }
-
-  return count;
 }
 
 bool path_exists(const char* path) {
@@ -314,14 +221,16 @@ exit_failure:
   return -1;
 }
 
+int remove_directory(const char* path) {
+  return nftw(path, remove_directory_nftw_callback, REMOVE_RECURSIVE_MAX_DIRECTORIES, FTW_DEPTH | FTW_PHYS);
+}
+
+int remove_directory_nftw_callback(const char* fpath, const struct stat* sb, int typeflag, struct FTW* ftwbuf) {
+  return remove(fpath);
+}
+
 GENERATE_GET_DIRENT_NAMES_FUNCTION_DEFINITION(get_directory_names)
   GENERATE_GET_DIRENT_NAMES_FUNCTION_SOURCE(IS_DIRECTORY_CONDITION)
 
 GENERATE_GET_DIRENT_NAMES_FUNCTION_DEFINITION(get_file_names)
   GENERATE_GET_DIRENT_NAMES_FUNCTION_SOURCE(IS_FILE_CONDITION)
-
-GENERATE_GET_DIRENTS_LENGTH_FUNCTION_DEFINITION(get_directories_length)
-  GENERATE_GET_DIRENTS_LENGTH_FUNCTION_SOURCE(IS_DIRECTORY_CONDITION)
-
-GENERATE_GET_DIRENTS_LENGTH_FUNCTION_DEFINITION(get_files_length)
-  GENERATE_GET_DIRENTS_LENGTH_FUNCTION_SOURCE(IS_FILE_CONDITION)

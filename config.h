@@ -108,4 +108,7 @@ static const struct Command commands[] = {
 
 #endif
 
+// the max amount of directories that ntfw will store
+#define REMOVE_RECURSIVE_MAX_DIRECTORIES 64
+
 #endif

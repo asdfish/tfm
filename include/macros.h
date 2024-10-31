@@ -63,30 +63,6 @@ exit_failure:                                                                   
   return -1;                                                                                    \
 }
 
-#define GENERATE_GET_DIRENTS_LENGTH_FUNCTION_DEFINITION(name) \
-  int name(const char* path, unsigned int* length)
-
-#define GENERATE_GET_DIRENTS_LENGTH_FUNCTION_SOURCE(condition) { \
-  DIR* directory_pointer = opendir(path);                        \
-  if(directory_pointer == NULL)                                  \
-    goto exit_failure;                                           \
-                                                                 \
-  struct dirent* dirent_pointer = NULL;                          \
-                                                                 \
-  unsigned int dirent_count = 0;                                 \
-  while((dirent_pointer = readdir(directory_pointer)) != NULL)   \
-    if(condition)                                                \
-      dirent_count ++;                                           \
-                                                                 \
-  *length = dirent_count;                                        \
-                                                                 \
-  closedir(directory_pointer);                                   \
-  return 0;                                                      \
-                                                                 \
-exit_failure:                                                    \
-  return -1;                                                     \
-}
-
 #define IS_DIRECTORY_CONDITION dirent_pointer->d_type == DT_DIR &&                                 \
                                                        strcmp(dirent_pointer->d_name, ".") != 0 && \
                                                        strcmp(dirent_pointer->d_name, "..") != 0

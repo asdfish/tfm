@@ -3,7 +3,7 @@
 #include <config.h>
 #include <macros.h>
 #include <tfm.h>
-#include <utils.h>
+#include <utils/string.h>
 
 int command_line_execute_command_mode(struct CommandLine* command_line);
 
