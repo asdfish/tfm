@@ -6,30 +6,27 @@ C_FLAGS := -std=gnu11 $\
 					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
 
-DIRECTORIES := build deps build/utils
+DIRECTORIES := deps
 DEPENDENCIES := deps/orchestra deps/termbox2
 
-PROCESSED_HEADER_FILES := include/bind_functions.h.gch include/commands.h.gch include/command_line.h.gch include/macros.h.gch include/menu.h.gch include/tfm.h.gch $\
-													include/utils/filesystem.h.gch include/utils/string.h.gch include/utils/ui.h.gch
+HEADER_FILES := $(shell find -name '*.h' -not -path './deps/*')
+PROCESSED_HEADER_FILES := $(subst .h,$\
+														$(if $(findstring clang,${CC}),$\
+															.h.pch,$\
+															.h.gch$\
+														),$\
+													${HEADER_FILES})
 
-OBJECT_FILES := build/bind_functions.o build/commands.o build/command_line.o build/main.o build/menu.o build/tfm.o $\
-								build/utils/filesystem.o build/utils/string.o build/utils/ui.o $\
-								build/termbox2.o
+SOURCE_FILES := $(shell find -name '*.c' -not -path './deps/*')
+OBJECT_FILES := $(patsubst ./src/%.c,./build/%.o,${SOURCE_FILES})
 
-all: check_clang ${DIRECTORIES} ${DEPENDENCIES} tfm
-
-check_clang:
-ifeq (clang,${CC})
-	$(eval PROCESSED_HEADER_FILES := $(subst .h,.h.pch,${PROCESSED_HEADER_FILES}))
-endif
+all: ${DIRECTORIES} ${DEPENDENCIES} tfm
 
 ${DIRECTORIES}:
 	$(foreach DIRECTORY,$\
 		${DIRECTORIES},$\
 		$(if $(wildcard ${DIRECTORY}),,$\
-			$(shell mkdir ${DIRECTORY})$\
-		)$\
-	)
+			$(shell mkdir ${DIRECTORY})))
 
 deps/orchestra:
 	git -C deps clone https://github.com/asdfish/orchestra --depth=1
@@ -42,29 +39,28 @@ clean:
 	$(foreach DIRECTORY,$\
 		${DIRECTORIES},$\
 		$(if $(wildcard ${DIRECTORY}),$\
-			$(shell rm -rf ${DIRECTORY})$\
-		)$\
-	)
+			$(shell rm -rf ${DIRECTORY})))
 ifneq (, $(wildcard tfm))
 	rm -f tfm
 endif
-ifneq (, $(wildcard include/*.gch))
-	rm include/*.gch
-endif
-ifneq (, $(wildcard include/*.pch))
-	rm include/*.pch
-endif
+	$(foreach PROCESSED_HEADER_FILE,$\
+		${PROCESSED_HEADER_FILES},$\
+		$(if $(wildcard ${PROCESSED_HEADER_FILE}),$\
+			$(shell rm ${PROCESSED_HEADER_FILE})))
 
-include/%.gch: include/%
+%.gch: %
 	${CC} -c $< ${C_FLAGS}
 
-include/%.pch: include/%.gch
+%.pch: %
 	${CC} -c $< ${C_FLAGS}
 
 build/%.o: src/%.c
+ifeq (, $(wildcard $(dir $<)))
+	mkdir -p $(dir $<)
+endif
 	${CC} -c $< ${C_FLAGS} -o $@
 
 tfm: ${PROCESSED_HEADER_FILES} ${OBJECT_FILES}
 	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
 
-.PHONY: all check_clang clean
+.PHONY: all clean
