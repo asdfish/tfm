@@ -221,6 +221,23 @@ exit_failure:
   return -1;
 }
 
+int remove_path(const char* path) {
+  int result = 0;
+
+  enum PathType type = path_type(path);
+
+  switch(type) {
+    case PATH_DIRECTORY:
+      result = remove_directory(path);
+      break;
+    case PATH_FILE:
+      result = remove(path);
+      break;
+  }
+
+  return result;
+}
+
 int remove_directory(const char* path) {
   return nftw(path, remove_directory_nftw_callback, REMOVE_RECURSIVE_MAX_DIRECTORIES, FTW_DEPTH | FTW_PHYS);
 }

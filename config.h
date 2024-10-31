@@ -94,6 +94,7 @@ static const struct BindingKey binding_keys[] = {
 #define MESSAGE_COMMAND_NOT_FOUND "Command %s not found."
 #define MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS "Not enough arguments were submitted."
 #define MESSAGE_CREATE_PATHS "Successfully created %u/%u paths."
+#define MESSAGE_REMOVE_PATHS "Successfully removed %u/%u paths."
 
 struct Command {
   const char* name;
@@ -103,6 +104,7 @@ struct Command {
 
 static const struct Command commands[] = {
   { "create_paths", command_create_paths },
+  { "remove_paths", command_remove_paths },
   { "quit", command_quit },
 };
 

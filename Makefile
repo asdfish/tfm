@@ -3,11 +3,11 @@ CC := gcc
 C_FLAGS := -std=gnu11 $\
 					 -Og -g -march=native -pipe $\
 					 -Wall -Wextra -Wpedantic -Wno-missing-field-initializers -Wno-unused-parameter $\
-					 -I. -Iinclude -Ideps/cector -Ideps/orchestra/include -Ideps/termbox2
+					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
 
 DIRECTORIES := build deps build/utils
-DEPENDENCIES := deps/cector deps/orchestra deps/termbox2
+DEPENDENCIES := deps/orchestra deps/termbox2
 
 PROCESSED_HEADER_FILES := include/bind_functions.h.gch include/commands.h.gch include/command_line.h.gch include/macros.h.gch include/menu.h.gch include/tfm.h.gch $\
 													include/utils/filesystem.h.gch include/utils/string.h.gch include/utils/ui.h.gch
@@ -30,9 +30,6 @@ ${DIRECTORIES}:
 			$(shell mkdir ${DIRECTORY})$\
 		)$\
 	)
-
-deps/cector:
-	git -C deps clone https://github.com/asdfish/cector --depth=1
 
 deps/orchestra:
 	git -C deps clone https://github.com/asdfish/orchestra --depth=1

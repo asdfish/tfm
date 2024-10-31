@@ -18,6 +18,7 @@ extern int get_dirents(const char* path, struct dirent*** output, unsigned int* 
 extern bool path_exists(const char* path);
 extern int path_separate(const char* path, const char*** directories, unsigned int* directories_length, const char** file);
 extern enum PathType path_type(const char* path);
+extern int remove_path(const char* path);
 extern int remove_directory(const char* path);
 extern int remove_directory_nftw_callback(const char* fpath, const struct stat* sb, int typeflag, struct FTW* ftwbuf);
 
