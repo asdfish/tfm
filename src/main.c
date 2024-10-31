@@ -9,21 +9,10 @@
 #include <stdlib.h>
 #include <utils.h>
 int main(void) {
-  const char** dirs = NULL;
-  unsigned int dirs_len = 0;
+  const char** names = NULL;
+  unsigned int names_length = 0;
 
-  if(get_dirent_names_recursive(".", &dirs, &dirs_len) != 0) {
-    printf("get_dirent_names_recursive\n");
-    return -1;
-  }
-
-  for(unsigned int i = 0; i < dirs_len; i ++) {
-    printf("%s\n", dirs[i]);
-    free((char*) dirs[i]);
-    dirs[i] = NULL;
-  }
-  free(dirs);
-  dirs = NULL;
+  get_dirent_names_recursive(".", &names, &names_length);
 
   return 0;
 }
