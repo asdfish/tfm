@@ -110,12 +110,11 @@ int command_line_execute_command_mode(struct CommandLine* command_line) {
   int exit_code = 0;
 
   unsigned int command = 0;
-  for(unsigned int i = 0; i < words_length; i ++)
-    for(unsigned int j = 0; j < ARRAY_LENGTH(commands); j ++)
-      if(strcmp(words[i], commands[j].name) == 0) {
-        command = j;
-        goto execute_command;
-      }
+  for(unsigned int i = 0; i < ARRAY_LENGTH(commands); i ++)
+    if(strcmp(words[0], commands[i].name) == 0) {
+      command = i;
+      goto execute_command;
+    }
 
   unsigned int message_length = strlen(MESSAGE_COMMAND_NOT_FOUND) - 2 +
     strlen(words[0]);

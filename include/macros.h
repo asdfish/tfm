@@ -75,7 +75,7 @@ exit_failure:                                                                   
 #define GENERATE_PATH_COMMAND_DEFINITION(name) \
   int name(const char** paths, unsigned int paths_length, bool* refresh, char** message)
 
-#define GENERATE_PATH_COMMAND_SOURCE(function, message_format_success) {   \
+#define GENERATE_PATH_COMMAND_SOURCE(function, message_format) {           \
   if(paths_length == 0) {                                                  \
     *message = strdup(MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS);               \
     if(*message == NULL)                                                   \
@@ -88,15 +88,15 @@ exit_failure:                                                                   
     if(function(paths[i]) == 0)                                            \
       successes ++;                                                        \
                                                                            \
-  unsigned int message_length = strlen(MESSAGE_CREATE_PATHS) +             \
+  unsigned int message_length = strlen(message_format) +                   \
     NUMBER_STRING_LENGTH(successes) + NUMBER_STRING_LENGTH(paths_length) - \
-    (string_count(MESSAGE_CREATE_PATHS, "%u") * 2);                        \
+    (string_count(message_format, "%u") * 2);                              \
                                                                            \
   *message = (char*) malloc((message_length + 1) * sizeof(char));          \
   if(*message == NULL)                                                     \
     return -1;                                                             \
                                                                            \
-  sprintf(*message, MESSAGE_CREATE_PATHS, successes, paths_length);        \
+  sprintf(*message, message_format, successes, paths_length);              \
                                                                            \
   *refresh = true;                                                         \
   return 0;                                                                \

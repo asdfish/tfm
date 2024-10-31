@@ -1,6 +1,16 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// config related macros
+
+#define MESSAGE_COMMAND_NOT_FOUND "Command %s not found."
+#define MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS "Not enough arguments were submitted."
+#define MESSAGE_CREATE_PATHS "Successfully created %u/%u paths."
+#define MESSAGE_REMOVE_PATHS "Successfully removed %u/%u paths."
+
+// the max amount of directories that ntfw will store
+#define REMOVE_RECURSIVE_MAX_DIRECTORIES 64
+
 #ifdef INCLUDE_CONFIG_FOREGROUNDS
 #include <menu.h>
 #include <termbox2.h>
@@ -91,11 +101,6 @@ static const struct BindingKey binding_keys[] = {
 #include <commands.h>
 #include <stdbool.h>
 
-#define MESSAGE_COMMAND_NOT_FOUND "Command %s not found."
-#define MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS "Not enough arguments were submitted."
-#define MESSAGE_CREATE_PATHS "Successfully created %u/%u paths."
-#define MESSAGE_REMOVE_PATHS "Successfully removed %u/%u paths."
-
 struct Command {
   const char* name;
 
@@ -103,14 +108,11 @@ struct Command {
 };
 
 static const struct Command commands[] = {
-  { "create_paths", command_create_paths },
-  { "remove_paths", command_remove_paths },
-  { "quit", command_quit },
+  { "cp", command_create_paths },
+  { "rp", command_remove_paths },
+  { "q", command_quit },
 };
 
 #endif
-
-// the max amount of directories that ntfw will store
-#define REMOVE_RECURSIVE_MAX_DIRECTORIES 64
 
 #endif

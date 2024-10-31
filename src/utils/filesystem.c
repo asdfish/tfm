@@ -151,6 +151,21 @@ bool path_exists(const char* path) {
     return false;
 }
 
+int path_actual_type(const char* path, enum PathType* type) {
+  struct stat stat_buffer;
+  if(stat(path, &stat_buffer) != 0)
+    return -1;
+
+  if(stat_buffer.st_mode & S_IFDIR)
+    *type = PATH_DIRECTORY;
+  else if(stat_buffer.st_mode & S_IFREG)
+    *type = PATH_FILE;
+  else
+    *type = PATH_UNKNOWN;
+
+  return 0;
+}
+
 enum PathType path_type(const char* path) {
   if(path[strlen(path) - 1] == '/')
     return PATH_DIRECTORY;
@@ -224,7 +239,9 @@ exit_failure:
 int remove_path(const char* path) {
   int result = 0;
 
-  enum PathType type = path_type(path);
+  enum PathType type = PATH_UNKNOWN;
+  if(path_actual_type(path, &type) != 0)
+    return -1;
 
   switch(type) {
     case PATH_DIRECTORY:
@@ -232,6 +249,9 @@ int remove_path(const char* path) {
       break;
     case PATH_FILE:
       result = remove(path);
+      break;
+    case PATH_UNKNOWN:
+      result = -1;
       break;
   }
 
