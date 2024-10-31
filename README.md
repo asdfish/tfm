@@ -3,7 +3,7 @@ Terminal File Manager
 
 ## Building
 ~~~sh
-git clone https://github.com/asdfish/tfm --depth 1
+git clone https://github.com/asdfish/tfm --depth 1 --recursive
 cd tfm
 sudo make install
 ~~~
