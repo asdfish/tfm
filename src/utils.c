@@ -23,7 +23,7 @@
   directory_pointer = NULL;                                                                     \
                                                                                                 \
   const char** dirent_names = (const char**) malloc(dirent_names_length * sizeof(const char*)); \
-  if(*dirent_names == NULL)                                                                     \
+  if(dirent_names == NULL)                                                                     \
     goto exit_failure;                                                                          \
                                                                                                 \
   directory_pointer = opendir(path);                                                            \
@@ -207,10 +207,73 @@ failure_exit:
 }
 
 int get_dirent_names_recursive(const char* path, const char*** output, unsigned int* output_length) {
+  const char** directories = (const char**) malloc(sizeof(const char*));
+  if(directories == NULL)
+    goto exit_failure;
+  unsigned int directories_length = 1;
+
+  directories[0] = NULL;
+  directories[0] = strdup(path);
+  if(directories[0] == NULL)
+    goto free_directories;
+
+  unsigned int i = 0;
+  while(true) {
+    if(i >= directories_length)
+      break;
+
+    const char** new_directories = NULL;
+    unsigned int new_directories_length = 0;
+
+    if(get_directories(directories[i], &new_directories, &new_directories_length) != 0)
+      goto free_directories_contents;
+
+    unsigned int old_length = directories_length;
+    unsigned int new_length = directories_length + new_directories_length;
+
+    const char** temp_pointer = (const char**) realloc(directories, new_length * sizeof(const char*));
+    if(temp_pointer == NULL)
+      goto free_new_directories_contents;
+    directories = temp_pointer;
+
+    for(unsigned int j = 0; j < new_directories_length; j ++)
+      directories[j + old_length] = new_directories[j];
+
+    free(new_directories);
+    new_directories = NULL;
+
+    directories_length = new_length;
+
+    i ++;
+    continue;
+
+free_new_directories_contents:
+    for(unsigned int j = 0; j < new_directories_length; j ++) {
+      free((char*) new_directories[j]);
+      new_directories[j] = NULL;
+    }
+    free(new_directories);
+    new_directories = NULL;
+    goto free_directories_contents;
+  }
+
+  *output = directories;
+  *output_length = directories_length;
   return 0;
+
+free_directories_contents:
+  for(unsigned int j = 0; j < i; j ++) {
+    free((char*) directories[j]);
+    directories[j] = NULL;
+  }
+free_directories:
+  free(directories);
+  directories = NULL;
+exit_failure:
+  return -1;
 }
 
-int get_directories(const char* path, const char*** output, unsigned int* output_length)
+int get_directories(const char* path, const char*** output, unsigned int* output_length) 
   GENERATE_DIRENT_FUNCTION(dirent_pointer->d_type == DT_DIR &&
       strcmp(dirent_pointer->d_name, ".") != 0 &&
       strcmp(dirent_pointer->d_name, "..") != 0)
