@@ -6,9 +6,6 @@ C_FLAGS := -std=gnu11 $\
 					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
 LD_FLAGS := -Ldeps/orchestra -lorchestra
 
-DIRECTORIES := deps
-DEPENDENCIES := deps/orchestra deps/termbox2
-
 HEADER_FILES := $(shell find -name '*.h' -not -path './deps/*')
 PROCESSED_HEADER_FILES := $(subst .h,$\
 														$(if $(findstring clang,${CC}),$\
@@ -20,26 +17,9 @@ PROCESSED_HEADER_FILES := $(subst .h,$\
 SOURCE_FILES := $(shell find -name '*.c' -not -path './deps/*')
 OBJECT_FILES := $(patsubst ./src/%.c,./build/%.o,${SOURCE_FILES})
 
-all: ${DIRECTORIES} ${DEPENDENCIES} tfm
-
-${DIRECTORIES}:
-	$(foreach DIRECTORY,$\
-		${DIRECTORIES},$\
-		$(if $(wildcard ${DIRECTORY}),,$\
-			$(shell mkdir ${DIRECTORY})))
-
-deps/orchestra:
-	git -C deps clone https://github.com/asdfish/orchestra --depth=1
-	$(MAKE) -C deps/orchestra
-
-deps/termbox2:
-	git -C deps clone https://github.com/termbox/termbox2 --depth=1
+all: ${DEPENDENCIES} tfm
 
 clean:
-	$(foreach DIRECTORY,$\
-		${DIRECTORIES},$\
-		$(if $(wildcard ${DIRECTORY}),$\
-			$(shell rm -rf ${DIRECTORY})))
 ifneq (, $(wildcard tfm))
 	rm -f tfm
 endif

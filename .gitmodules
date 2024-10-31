@@ -1,0 +1,7 @@
+[submodule "termbox2"]
+  path = deps/termbox2
+  url = https://github.com/termbox/termbox2
+
+[submodule "orchestra"]
+  path = deps/orchestra
+  url = https://github.com/asdfish/orchestra

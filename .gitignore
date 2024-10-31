@@ -1,5 +1,4 @@
 build
-deps
 tfm
 *.gch
 *.pch
