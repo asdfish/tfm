@@ -7,6 +7,7 @@
 #define MESSAGE_COMMAND_NOT_ENOUGH_ARGUMENTS "Not enough arguments were submitted."
 #define MESSAGE_CREATE_PATHS "Successfully created %u/%u paths."
 #define MESSAGE_REMOVE_PATHS "Successfully removed %u/%u paths."
+#define MESSAGE_MOVE_PATHS "Successfully moved %u/%u paths."
 
 // the max amount of directories that ntfw will store
 #define REMOVE_RECURSIVE_MAX_DIRECTORIES 64
@@ -113,6 +114,7 @@ struct Command {
 static const struct Command commands[] = {
   { "cp", command_create_paths },
   { "rp", command_remove_paths },
+  { "mv", command_move_paths },
   { "q", command_quit },
 };
 

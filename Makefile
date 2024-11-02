@@ -17,19 +17,24 @@ OBJECT_FILES := $(patsubst ./src/%.c,$\
 									./build/%.o,$\
 									$(shell find -name '*.c' -not -path './deps/*'))
 
+define REMOVE_LIST
+	$(foreach ITEM,$\
+		$(1),$\
+		$(if $(wildcard ${ITEM}),$\
+			$(shell rm ${ITEM})))
+
+endef
+
 all: tfm
 
 clean:
 ifneq (,$(wildcard tfm))
 	rm -f tfm
 endif
-ifneq (,$(wildcard build/*.o))
-	rm build/*.o
-endif
-	$(foreach PROCESSED_HEADER_FILE,$\
-		${PROCESSED_HEADER_FILES},$\
-		$(if $(wildcard ${PROCESSED_HEADER_FILE}),$\
-			$(shell rm ${PROCESSED_HEADER_FILE})))
+	$(call REMOVE_LIST,$\
+		${PROCESSED_HEADER_FILES})
+	$(call REMOVE_LIST,$\
+		${OBJECT_FILES})
 
 %.gch: %
 	${CC} -c $< ${C_FLAGS}
