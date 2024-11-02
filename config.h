@@ -54,15 +54,18 @@ static const struct BindingStroke binding_strokes[] = {
   { 'n', "v",  bind_function_menu_toggle_visual_mode },
   { 'n', ":",  bind_function_change_command_line_mode, { .c = ':' } },
   { 'n', "/",  bind_function_change_command_line_mode, { .c = '/' } },
+  { 'n', "d", bind_function_change_command_line_mode_with_menu_selection, { .c = ':', .str = "rp" } },
 
   { 'n', "k",  bind_function_menu_cursor_move, { .i = -1 } },
   { 'n', "j",  bind_function_menu_cursor_move, { .i = 1 } },
   { 'n', "G",  bind_function_menu_cursor_move_bottom },
   { 'n', "gg", bind_function_menu_cursor_move_top },
 
+
   // visual
   { 'v', "o",  bind_function_menu_switch_cursor_with_selection },
   { 'v', "i",  bind_function_menu_toggle_visual_mode },
+  { 'v', "d", bind_function_change_command_line_mode_with_menu_selection, { .c = ':', .str = "rp" } },
 
   { 'v', "k",  bind_function_menu_cursor_move, { .i = -1 } },
   { 'v', "j",  bind_function_menu_cursor_move, { .i = 1 } },

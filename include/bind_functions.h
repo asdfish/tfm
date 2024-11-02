@@ -11,6 +11,8 @@ struct Argument {
 };
 
 extern int bind_function_change_command_line_mode(const struct Argument* argument);
+extern int bind_function_change_command_line_mode_with(const struct Argument* argument);
+extern int bind_function_change_command_line_mode_with_menu_selection(const struct Argument* argument);
 extern int bind_function_exit_command_mode(const struct Argument* argument);
 
 extern int bind_function_command_line_cursor_move(const struct Argument* argument);

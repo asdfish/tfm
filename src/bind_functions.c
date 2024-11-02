@@ -11,7 +11,45 @@ int bind_function_change_command_line_mode(const struct Argument* argument) {
 int bind_function_change_command_line_mode_with(const struct Argument* argument) {
   bind_function_change_command_line_mode(argument);
   o_string_set(&command_line.command, argument->str);
+  command_line.cursor = strlen(command_line.command.contents);
   return 0;
+}
+
+int bind_function_change_command_line_mode_with_menu_selection(const struct Argument* argument) {
+  int exit_code = 0;
+
+  struct MenuItem** selected_items = NULL;
+  unsigned int selected_items_length = 0;
+
+  if(menu_get_selected(&menu, &selected_items, &selected_items_length) != 0) {
+    exit_code = -1;
+    goto exit;
+  }
+
+  if(o_string_set(&command_line.command, argument->str) != O_SUCCESS) {
+    exit_code = -1;
+    goto free_selected_items;
+  }
+
+  for(unsigned int i = 0; i < selected_items_length; i ++) {
+    if(o_string_cat(&command_line.command, " ") != O_SUCCESS) {
+      exit_code = -1;
+      goto free_selected_items;
+    }
+    if(o_string_cat(&command_line.command, selected_items[i]->contents) != O_SUCCESS) {
+      exit_code = -1;
+      goto free_selected_items;
+    }
+  }
+
+  bind_function_change_command_line_mode(argument);
+  command_line.cursor = strlen(command_line.command.contents);
+
+free_selected_items:
+  free(selected_items);
+  selected_items = NULL;
+exit:
+  return exit_code;
 }
 
 int bind_function_exit_command_mode(const struct Argument* argument) {

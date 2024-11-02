@@ -104,10 +104,18 @@ unsigned int menu_get_current_items_length(struct Menu* menu) {
 int menu_get_selected(struct Menu* menu, struct MenuItem*** output, unsigned int* output_length) {
   menu_verify_cursor_position(menu);
 
-  if(menu->mode != 'v')
-    return 0;
-
   struct MenuItem** items = menu_get_current_items(menu);
+
+  if(menu->mode != 'v') {
+    *output = (struct MenuItem**) malloc(sizeof(struct MenuItem*));
+    if(*output == NULL)
+      return -1;
+
+    (*output)[0] = items[menu->cursor];
+    *output_length = 1;
+
+    return 0;
+  }
 
   unsigned int min = MIN(menu->cursor, menu->selection);
   unsigned int max = MAX(menu->cursor, menu->selection);

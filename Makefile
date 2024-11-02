@@ -1,4 +1,4 @@
-CC := gcc
+CC ?= gcc
 
 C_FLAGS := -std=gnu11 $\
 					 -O2 -march=native -pipe $\
