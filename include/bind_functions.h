@@ -20,6 +20,7 @@ extern int bind_function_command_line_delete_char(const struct Argument* argumen
 extern int bind_function_command_line_execute(const struct Argument* argument);
 
 extern int bind_function_menu_change_directory(const struct Argument* argument);
+extern int bind_function_menu_change_directory_parent(const struct Argument* argument);
 extern int bind_function_menu_cursor_move(const struct Argument* argument);
 extern int bind_function_menu_cursor_move_bottom(const struct Argument* argument);
 extern int bind_function_menu_cursor_move_top(const struct Argument* argument);

@@ -24,7 +24,4 @@ extern int remove_path(const char* path);
 extern int remove_directory(const char* path);
 extern int remove_directory_nftw_callback(const char* fpath, const struct stat* sb, int typeflag, struct FTW* ftwbuf);
 
-extern GENERATE_GET_DIRENT_NAMES_FUNCTION_DEFINITION(get_directory_names);
-extern GENERATE_GET_DIRENT_NAMES_FUNCTION_DEFINITION(get_file_names);
-
 #endif

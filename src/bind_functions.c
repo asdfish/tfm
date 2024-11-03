@@ -91,6 +91,12 @@ int bind_function_menu_change_directory(const struct Argument* argument) {
   return 0;
 }
 
+int bind_function_menu_change_directory_parent(const struct Argument* argument) {
+  if(chdir("..") != 0)
+    return -1;
+  return tfm_change_directory(".");
+}
+
 int bind_function_menu_cursor_move(const struct Argument* argument) {
   menu_move_cursor(&menu, argument->i);
   return 0;

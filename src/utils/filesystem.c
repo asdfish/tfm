@@ -101,7 +101,9 @@ int get_dirents(const char* path, struct dirent*** output, unsigned int* output_
 
   unsigned int directory_length = 0;
   while((dirent_pointer = readdir(directory_pointer)) != NULL)
-    directory_length ++;
+    if(strcmp(dirent_pointer->d_name, ".") != 0 &&
+        strcmp(dirent_pointer->d_name, "..") != 0)
+      directory_length ++;
 
   closedir(directory_pointer);
   directory_pointer = NULL;
@@ -115,13 +117,15 @@ int get_dirents(const char* path, struct dirent*** output, unsigned int* output_
     goto free_output;
 
   unsigned int i = 0;
-  while((dirent_pointer = readdir(directory_pointer)) != NULL) {
-    (*output)[i] = (struct dirent*) malloc(sizeof(struct dirent));
-    if((*output)[i] == NULL)
-      goto free_output_contents;
-    memmove((*output)[i], dirent_pointer, sizeof(struct dirent));
-    i ++;
-  }
+  while((dirent_pointer = readdir(directory_pointer)) != NULL)
+    if(strcmp(dirent_pointer->d_name, ".") != 0 &&
+        strcmp(dirent_pointer->d_name, "..") != 0) {
+      (*output)[i] = (struct dirent*) malloc(sizeof(struct dirent));
+      if((*output)[i] == NULL)
+        goto free_output_contents;
+      memmove((*output)[i], dirent_pointer, sizeof(struct dirent));
+      i ++;
+    }
 
   closedir(directory_pointer);
   directory_pointer = NULL;
@@ -265,9 +269,3 @@ int remove_directory(const char* path) {
 int remove_directory_nftw_callback(const char* fpath, const struct stat* sb, int typeflag, struct FTW* ftwbuf) {
   return remove(fpath);
 }
-
-GENERATE_GET_DIRENT_NAMES_FUNCTION_DEFINITION(get_directory_names)
-  GENERATE_GET_DIRENT_NAMES_FUNCTION_SOURCE(IS_DIRECTORY_CONDITION)
-
-GENERATE_GET_DIRENT_NAMES_FUNCTION_DEFINITION(get_file_names)
-  GENERATE_GET_DIRENT_NAMES_FUNCTION_SOURCE(IS_FILE_CONDITION)
