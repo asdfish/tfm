@@ -35,7 +35,7 @@ endef
 all: tfm
 
 clean:
-	$(call REMOVE_LIST,${TFM_REQUIREMENTS})
+	$(call REMOVE_LIST,${TFM_REQUIREMENTS} tfm)
 
 %.gch: %
 	${CC} -c $< ${C_FLAGS}
