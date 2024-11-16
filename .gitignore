@@ -1,4 +1,4 @@
-build
 tfm
+*.o
 *.gch
 *.pch
