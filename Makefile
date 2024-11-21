@@ -1,10 +1,10 @@
 CC ?= gcc
-
-C_FLAGS := -std=gnu11 $\
-					 -O2 -march=native -pipe $\
-					 -Wall -Wextra -Wpedantic -Wno-missing-field-initializers -Wno-unused-parameter $\
-					 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
-LD_FLAGS := -Ldeps/orchestra -lorchestra
+CFLAGS ?= -O2 -march=native -pipe
+COMMONFLAGS := -std=gnu11 $\
+							 -Wall -Wextra -Wpedantic -Wno-missing-field-initializers -Wno-unused-parameter $\
+							 -I. -Iinclude -Ideps/orchestra/include -Ideps/termbox2
+LDFLAGS := ${CFLAGS} ${COMMONFLAGS} $\
+					 -Ldeps/orchestra -lorchestra
 
 PROCESS_HEADER_FILES := yes
 PROCESSED_HEADER_FILES := $(if ${PROCESS_HEADER_FILES},$\
@@ -25,11 +25,20 @@ $(if $(wildcard $(1)),$\
 	rm $(1))
 
 endef
+define REMOVE_DEPENDENCY
+$(MAKE) -C $(dir $(1)) clean
+
+endef
 define REMOVE_LIST
 $(foreach ITEM,$\
 	$(1),$\
-	$(call REMOVE,${ITEM}))
+	$(if $(findstring .a,${ITEM}),$\
+		$(call REMOVE_DEPENDENCY,${ITEM}),$\
+		$(call REMOVE,${ITEM})))
 
+endef
+define COMPILE
+${CC} -c $1 ${CFLAGS} ${COMMONFLAGS} -o $2
 endef
 
 all: tfm
@@ -38,18 +47,17 @@ clean:
 	$(call REMOVE_LIST,${TFM_REQUIREMENTS} tfm)
 
 %.gch: %
-	${CC} -c $< ${C_FLAGS}
-
+	$(call COMPILE,$<,$@)
 %.pch: %
-	${CC} -c $< ${C_FLAGS}
+	$(call COMPILE,$<,$@)
 
 build/%.o: src/%.c
-	${CC} -c $< ${C_FLAGS} -o $@
+	$(call COMPILE,$<,$@)
 
-deps/orchestra/liborchestra.a:
-	$(MAKE) -C deps/orchestra
+%.a:
+	CFLAGS='${CFLAGS}' $(MAKE) -C $(dir $@)
 
 tfm: ${TFM_REQUIREMENTS}
-	${CC} ${OBJECT_FILES} ${LD_FLAGS} -o tfm
+	${CC} ${OBJECT_FILES} ${LDFLAGS} -o tfm
 
 .PHONY: all clean
