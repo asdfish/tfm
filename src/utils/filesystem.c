@@ -3,7 +3,7 @@
 #include <config.h>
 #include <utils/filesystem.h>
 #include <utils/string.h>
-#include <orchestra.h>
+#include <orchestra/orchestra.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>

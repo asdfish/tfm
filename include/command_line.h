@@ -1,7 +1,7 @@
 #ifndef COMMAND_LINE_H
 #define COMMAND_LINE_H
 
-#include <orchestra.h>
+#include <orchestra/orchestra.h>
 #include <termbox2.h>
 #include <stdbool.h>
 

@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <orchestra.h>
+#include <orchestra/orchestra.h>
 #include <termbox2.h>
 
 struct MenuItem {
